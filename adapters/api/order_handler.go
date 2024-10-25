@@ -82,3 +82,19 @@ func (oh *OrderHandler) GetAllOrders(c *fiber.Ctx) error {
 
 	return c.JSON(orders)
 }
+
+func (oh *OrderHandler) GetOrderByUserID(c *fiber.Ctx) error {
+	idParams, err := strconv.Atoi(c.Params("id"))
+
+	if err != nil {
+		return errors.New(err.Error())
+	}
+
+	order, err := oh.OrderUsecase.GetOrderByUserID(idParams)
+
+	if err != nil {
+		return errors.New(err.Error())
+	}
+
+	return c.JSON(order)
+}

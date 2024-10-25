@@ -103,6 +103,7 @@ func SetUpRouters(app *fiber.App, db *gorm.DB) {
 	app.Post("/orders", handlers.OrderHandler.CreateOrder)
 	app.Get("/orders", handlers.OrderHandler.GetAllOrders)
 	app.Get("/order/:id", handlers.OrderHandler.GetOrderByID)
+	app.Get("/order/user/:id", handlers.OrderHandler.GetOrderByUserID)
 	app.Put("/order/:id", handlers.OrderHandler.UpdateOrder)
 
 	//Package

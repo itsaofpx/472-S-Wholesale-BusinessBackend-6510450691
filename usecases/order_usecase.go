@@ -10,6 +10,7 @@ type OrderUsecase interface {
 	CreateOrder(o entities.Order) (entities.Order, error)
 	UpdateOrder(id int, o entities.Order) (entities.Order, error)
 	GetOrderByID(id int) (entities.Order, error)
+	GetOrderByUserID(userId int) ([]entities.Order, error)
 	GetAllOrders() ([]entities.Order, error)
 }
 
@@ -64,4 +65,14 @@ func (os *OrderService) GetAllOrders() ([]entities.Order, error) {
 	}
 
 	return orders, nil
+}
+
+func (os *OrderService) GetOrderByUserID(userId int) ([]entities.Order, error) {
+	order, err := os.repo.GetOrderByUserID(userId)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return order, nil	
 }

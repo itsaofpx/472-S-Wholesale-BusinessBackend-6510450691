@@ -71,3 +71,17 @@ func (opr *OrderPostgreRepository) GetAllOrders() ([]entities.Order, error) {
 
 	return orders, nil
 }
+
+func (opr *OrderPostgreRepository) GetOrderByUserID(userId int) ([]entities.Order, error) {
+	query := "SELECT id, o_status, o_timestamp, o_total_price, user_id FROM public.orders WHERE user_id = $1;"
+
+	var orders []entities.Order
+
+	result := opr.db.Raw(query, userId).Scan(&orders)
+
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return orders, nil
+}

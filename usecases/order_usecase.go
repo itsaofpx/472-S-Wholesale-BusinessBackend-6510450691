@@ -3,6 +3,7 @@ package usecases
 import (
 	"github.com/ppwlsw/sa-project-backend/domain/entities"
 	"github.com/ppwlsw/sa-project-backend/usecases/repositories"
+	"time"
 )
 
 type OrderUsecase interface {
@@ -23,6 +24,9 @@ func InitiateOrderService(repo repositories.OrderRepository) OrderUsecase {
 }
 
 func (os *OrderService) CreateOrder(o entities.Order) (entities.Order, error) {
+	o.O_status = "P"
+	o.O_total_price = 0
+	o.O_timestamp = time.Now()
 	createdOrder, err := os.repo.CreateOrder(o)
 
 	if err != nil {

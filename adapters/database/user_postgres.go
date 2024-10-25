@@ -16,9 +16,9 @@ func InitiateUserPostgresRepository(db *gorm.DB) repositories.UserRepository {
 }
 
 func (upr *UserPostgresRepository) CreateUser(newUser *entities.User) error {
-	query := "INSERT INTO public.users(credential_id, name, phone_number, email, password, status, role, tier_rank, address) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)"
+	query := "INSERT INTO public.users(credential_id, f_name, l_name,phone_number, email, password, status, role, tier_rank, address) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)"
 
-	err := upr.db.Exec(query, newUser.CredentialID, newUser.Name, newUser.PhoneNumber, newUser.Email, newUser.Password, newUser.Status, newUser.Role, newUser.TierRank, newUser.Address)
+	err := upr.db.Exec(query, newUser.CredentialID, newUser.FName, newUser.LName, newUser.PhoneNumber, newUser.Email, newUser.Password, newUser.Status, newUser.Role, newUser.TierRank, newUser.Address)
 	if err != nil {
 		return err.Error
 	}
@@ -29,7 +29,7 @@ func (upr *UserPostgresRepository) CreateUser(newUser *entities.User) error {
 func (upr *UserPostgresRepository) GetUserByID(id int) (*entities.User, error) {
 	var user *entities.User
 
-	query := "SELECT id, credential_id, name, phone_number, email, password, status, role, tier_rank, address FROM users WHERE id = $1"
+	query := "SELECT id, credential_id, f_name, l_name, phone_number, email, password, status, role, tier_rank, address FROM users WHERE id = $1"
 
 	result := upr.db.Raw(query, id).Scan(user)
 
@@ -41,7 +41,7 @@ func (upr *UserPostgresRepository) GetUserByID(id int) (*entities.User, error) {
 }
 
 func (upr *UserPostgresRepository) GetAllUsers() (*[]entities.User, error) {
-	query := "SELECT id, credential_id, name, phone_number, email, password, status, role, tier_rank, address FROM users"
+	query := "SELECT id, credential_id, f_name, l_name, phone_number, email, password, status, role, tier_rank, address FROM users"
 	var users *[]entities.User
 
 	result := upr.db.Raw(query).Scan(&users)
@@ -55,7 +55,7 @@ func (upr *UserPostgresRepository) GetAllUsers() (*[]entities.User, error) {
 }
 
 func (upr *UserPostgresRepository) FindUserByEmail(email string) (*entities.User, error) {
-	query := "SELECT credential_id, name, phone_number, email, password, status, role, tier_rank, address FROM users WHERE email = $1"
+	query := "SELECT credential_id, f_name, l_name, phone_number, email, password, status, role, tier_rank, address FROM users WHERE email = $1"
 	var user *entities.User
 
 	result := upr.db.Raw(query, email).Scan(&user)
@@ -68,7 +68,7 @@ func (upr *UserPostgresRepository) FindUserByEmail(email string) (*entities.User
 }
 
 func (upr *UserPostgresRepository) UpdateUserTierByID(req *request.UpdateTierByUserIDRequest, user *entities.User) (*entities.User, error) {
-	query := "UPDATE users as u SET tier_rank=$1 WHERE u.id = $2 RETURNING id, credential_id, name, phone_number, email, password, status, role, tier_rank, address;"
+	query := "UPDATE users as u SET tier_rank=$1 WHERE u.id = $2 RETURNING id, credential_id, f_name, l_name, phone_number, email, password, status, role, tier_rank, address;"
 
 	result := upr.db.Raw(query, req.Tier, req.ID).Scan(&user)
 	if result.Error != nil {

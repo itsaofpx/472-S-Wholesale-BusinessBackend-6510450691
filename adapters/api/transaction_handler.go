@@ -84,4 +84,16 @@ func (th *TransactionHandler) GetAllTransactions(c *fiber.Ctx) error {
 	return c.JSON(transactions)
 }
 
+func (th *TransactionHandler) GetTransactionByOrderId(c *fiber.Ctx) error {
+    orderId := c.Params("order_id")
+    id, err := strconv.Atoi(orderId)
+    if err != nil {
+        return err
+    }
+    transaction, err := th.TransactionUsecase.GetTransactionByOrderId(id)
+    if err != nil {
+        return err
+    }
+    return c.JSON(transaction)
+}
 

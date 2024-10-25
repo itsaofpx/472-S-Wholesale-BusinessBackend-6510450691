@@ -8,6 +8,7 @@ import (
 type TransactionUsecase interface {
 	CreateTransaction(t entities.Transaction) (entities.Transaction, error)
 	GetTransactionById(id int) (entities.Transaction, error)
+	GetTransactionByOrderId(orderId int) (entities.Transaction, error)
 	GetAllTransactions() ([]entities.Transaction, error)
 	UpdateTransaction(id int, t entities.Transaction) (entities.Transaction, error)
 }
@@ -53,4 +54,12 @@ func (ts *TransactionService) UpdateTransaction(id int, updatedTransaction entit
 		return entities.Transaction{}, err
 	}
 	return updatedTrans, nil
+}
+
+func (ts *TransactionService) GetTransactionByOrderId(orderId int) (entities.Transaction, error) {
+	t, err := ts.repo.GetTransactionByOrderId(orderId)
+	if err != nil {
+		return entities.Transaction{}, err
+	}
+	return t, nil
 }

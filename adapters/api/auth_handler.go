@@ -1,7 +1,10 @@
 package api
 
 import (
+	"fmt"
+
 	"github.com/gofiber/fiber/v2"
+	"github.com/jinzhu/copier"
 	"github.com/ppwlsw/sa-project-backend/domain/entities"
 	"github.com/ppwlsw/sa-project-backend/domain/request"
 	"github.com/ppwlsw/sa-project-backend/usecases"
@@ -11,7 +14,7 @@ type AuthHandler struct {
 	AuthUsecase usecases.AuthUsecase
 }
 
-func ProvideAuthHandler(usecase usecases.AuthUsecase) *AuthHandler {
+func InitiateAuthHandler(usecase usecases.AuthUsecase) *AuthHandler {
 	return &AuthHandler{
 		AuthUsecase: usecase,
 	}
@@ -19,10 +22,16 @@ func ProvideAuthHandler(usecase usecases.AuthUsecase) *AuthHandler {
 
 func (ah *AuthHandler) Register(c *fiber.Ctx) error {
 	var user entities.User
-	if err := c.BodyParser(&user); err != nil {
+	var req request.RegisterRequest
+
+	if err := c.BodyParser(&req); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": "Can not Parse Body",
 		})
+	}
+
+	if err := copier.Copy(&user, &req); err != nil {
+		fmt.Println("Error copying data:", err)
 	}
 
 	if err := ah.AuthUsecase.Register(&user); err != nil {

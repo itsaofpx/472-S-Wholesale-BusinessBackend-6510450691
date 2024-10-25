@@ -10,9 +10,9 @@ import (
 
 func SetUpRouters(app *fiber.App, db *gorm.DB) {
 
-	userRepo := database.ProvideUserPostgresRepository(db)
-	userService := usecases.ProvideUserService(userRepo)
-	userHandler := api.ProvideUserHandler(userService)
+	userRepo := database.InitiateUserPostgresRepository(db)
+	userService := usecases.InitiateUserService(userRepo)
+	userHandler := api.InitiateUserHandler(userService)
 
 	productRepo := database.InitiateProductPostGresRepository(db)
 	productService := usecases.InitiateProductsService(productRepo)
@@ -22,8 +22,8 @@ func SetUpRouters(app *fiber.App, db *gorm.DB) {
 	transactionService := usecases.InitiateTransactionService(transactionRepo)
 	transactionHandler := api.InitiateTransactionHandler(transactionService)
 
-	authService := usecases.ProvideAuthService(userRepo)
-	authHandler := api.ProvideAuthHandler(authService)
+	authService := usecases.InitiateAuthService(userRepo)
+	authHandler := api.InitiateAuthHandler(authService)
 
 	shipmentRepo := database.InitiateShipmentPostgresRepository(db)
 	shipmentService := usecases.InitiateShipmentService(shipmentRepo)

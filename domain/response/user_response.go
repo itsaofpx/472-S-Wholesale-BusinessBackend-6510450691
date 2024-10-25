@@ -9,11 +9,11 @@ type UserResponse struct {
 	Status       string `json:"status"`
 	Role         int    `json:"role"`
 	TierRank     int    `json:"tier_rank"`
+	Address      string `json:"address"`
 }
 
 type GetUserResponse UserResponse
 
-type GetUsersResponse struct{
+type GetUsersResponse struct {
 	Users []GetUserResponse
 }
-

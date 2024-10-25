@@ -7,7 +7,7 @@ import (
 )
 
 type TransactionPostgresRepository struct {
-	db *gorm.DB
+    db *gorm.DB
 }
 
 func InitiateTransactionPostGresRepository(db *gorm.DB) repositories.TransactionRepository {
@@ -16,56 +16,73 @@ func InitiateTransactionPostGresRepository(db *gorm.DB) repositories.Transaction
 	}
 }
 
+
 func (tpr *TransactionPostgresRepository) CreateTransaction(t entities.Transaction) (entities.Transaction, error) {
-	query := "INSERT INTO public.transactions(t_time_stamp, t_net_price, t_image_url) VALUES ($1, $2, $3) RETURNING id, t_time_stamp, t_net_price, t_image_url;"
+    query := "INSERT INTO public.transactions(t_time_stamp, t_net_price, t_image_url, order_id) VALUES ($1, $2, $3, $4) RETURNING id, t_time_stamp, t_net_price, t_image_url, order_id;"
 
-	var transaction entities.Transaction
+    var transaction entities.Transaction
 
-	result := tpr.db.Raw(query, t.T_time_stamp, t.T_net_price, t.T_image_url).Scan(&transaction)
+    result := tpr.db.Raw(query, t.T_time_stamp, t.T_net_price, t.T_image_url, t.OrderId).Scan(&transaction)
 
-	if result.Error != nil {
-		return entities.Transaction{}, result.Error
-	}
+    if result.Error != nil {
+        return entities.Transaction{}, result.Error
+    }
 
-	return transaction, nil
+    return transaction, nil
 }
 
 func (tpr *TransactionPostgresRepository) UpdateTransaction(id int, t entities.Transaction) (entities.Transaction, error) {
-	query := "UPDATE public.transactions SET t_time_stamp=$2, t_net_price=$3, t_image_url=$4 WHERE id = $1 RETURNING id, t_time_stamp, t_net_price, t_image_url;"
-	var transaction entities.Transaction
+    query := "UPDATE public.transactions SET t_time_stamp=$2, t_net_price=$3, t_image_url=$4, order_id=$5 WHERE id = $1 RETURNING id, t_time_stamp, t_net_price, t_image_url, order_id;"
 
-	result := tpr.db.Raw(query, id, t.T_time_stamp, t.T_net_price, t.T_image_url).Scan(&transaction)
+    var transaction entities.Transaction
 
-	if result.Error != nil {
-		return entities.Transaction{}, result.Error
-	}
+    result := tpr.db.Raw(query, id, t.T_time_stamp, t.T_net_price, t.T_image_url, t.OrderId).Scan(&transaction)
 
-	return transaction, nil
+    if result.Error != nil {
+        return entities.Transaction{}, result.Error
+    }
+
+    return transaction, nil
 }
 
 func (tpr *TransactionPostgresRepository) GetTransactionById(id int) (entities.Transaction, error) {
-	var transaction entities.Transaction
+    query := "SELECT id, t_time_stamp, t_net_price, t_image_url, order_id FROM public.transactions WHERE id = $1;"
 
-	query := "SELECT id, t_time_stamp, t_net_price, t_image_url FROM public.transactions WHERE id = $1;"
+    var transaction entities.Transaction
 
-	result := tpr.db.Raw(query, id).Scan(&transaction)
+    result := tpr.db.Raw(query, id).Scan(&transaction)
 
-	if result.Error != nil {
-		return entities.Transaction{}, result.Error
-	}
+    if result.Error != nil {
+        return entities.Transaction{}, result.Error
+    }
 
-	return transaction, nil
+    return transaction, nil
 }
 
 func (tpr *TransactionPostgresRepository) GetAllTransactions() ([]entities.Transaction, error) {
-	query := "SELECT id, t_time_stamp, t_net_price, t_image_url FROM public.transactions"
-	var transactions []entities.Transaction
+    query := "SELECT id, t_time_stamp, t_net_price, t_image_url, order_id FROM public.transactions;"
 
-	result := tpr.db.Raw(query).Scan(&transactions)
+    var transactions []entities.Transaction
 
-	if result.Error != nil {
-		return nil, result.Error
-	}
+    result := tpr.db.Raw(query).Scan(&transactions)
 
-	return transactions, nil
+    if result.Error != nil {
+        return nil, result.Error
+    }
+
+    return transactions, nil
+}
+
+func (tpr *TransactionPostgresRepository) GetTransactionByOrderId(orderId int) (entities.Transaction, error) {
+    query := "SELECT id, t_time_stamp, t_net_price, t_image_url, order_id FROM public.transactions WHERE order_id = $1;"
+
+    var transaction entities.Transaction
+
+    result := tpr.db.Raw(query, orderId).Scan(&transaction)
+
+    if result.Error != nil {
+        return entities.Transaction{}, result.Error
+    }
+
+    return transaction, nil
 }

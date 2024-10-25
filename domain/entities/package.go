@@ -10,5 +10,5 @@ type Package struct {
 	Product    Product   `gorm:"foreignKey:ProductID"`
 	Quantity   int       `json:"quantity"`
 	Time_stamp time.Time `json:"time_stamp"`
-	Address    string    `json:"address"`
+	TrackingNo string    `json:"tracking_no"`
 }

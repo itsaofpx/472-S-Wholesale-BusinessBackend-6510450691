@@ -106,7 +106,7 @@ func SetUpRouters(app *fiber.App, db *gorm.DB) {
 	//Package
 	app.Post("/packages", packageHandler.CreatePackage)
 	app.Get("/packages/:id", packageHandler.GetPackageByID)
-	app.Get("/orders/:orderID/packages", packageHandler.GetAllPackagesByOrderID)
+	app.Get("/shipment/:id/packages", packageHandler.GetAllPackagesByShipmentID)
 	app.Get("/packages", packageHandler.GetAllPackages)
 
 	//OrderLine

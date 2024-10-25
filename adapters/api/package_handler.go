@@ -53,14 +53,14 @@ func (ph *PackageHandler) GetPackageByID(c *fiber.Ctx) error {
 	return c.JSON(packageData)
 }
 
-func (ph *PackageHandler) GetAllPackagesByOrderID(c *fiber.Ctx) error {
+func (ph *PackageHandler) GetAllPackagesByShipmentID(c *fiber.Ctx) error {
 	orderID, err := strconv.Atoi(c.Params("orderID"))
 
 	if err != nil {
 		return errors.New(err.Error())
 	}
 
-	packages, err := ph.PackageUsecase.GetAllPackagesByOrderID(orderID)
+	packages, err := ph.PackageUsecase.GetAllPackagesByShipmentID(orderID)
 
 	if err != nil {
 		return errors.New(err.Error())

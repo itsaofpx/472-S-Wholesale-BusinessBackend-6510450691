@@ -8,7 +8,7 @@ import (
 type PackageUsecase interface {
 	CreatePackage(p entities.Package) (entities.Package, error)
 	GetPackageByID(id int) (entities.Package, error)
-	GetAllPackagesByOrderID(id int) ([]entities.Package, error)
+	GetAllPackagesByShipmentID(id int) ([]entities.Package, error)
 	GetAllPackages() ([]entities.Package, error)
 }
 
@@ -42,8 +42,8 @@ func (ps *PackageService) GetPackageByID(id int) (entities.Package, error) {
 	return getPackage, nil
 }
 
-func (ps *PackageService) GetAllPackagesByOrderID(id int) ([]entities.Package, error) {
-	packages, err := ps.repo.GetAllPackagesByOrderID(id)
+func (ps *PackageService) GetAllPackagesByShipmentID(id int) ([]entities.Package, error) {
+	packages, err := ps.repo.GetAllPackagesByShipmentID(id)
 
 	if err != nil {
 		return nil, err

@@ -9,6 +9,7 @@ type ShipmentUsecase interface {
 	CreateShipment(s entities.Shipment) (entities.Shipment, error)
 	UpdateShipment(id int, s entities.Shipment) (entities.Shipment, error)
 	GetShipmentByID(id int) (entities.Shipment, error)
+	GetShipmentByOrderID(orderId int) (entities.Shipment, error)
 	GetAllShipments() ([]entities.Shipment, error)
 }
 
@@ -23,12 +24,11 @@ func InitiateShipmentService(repo repositories.ShipmentRepository) ShipmentUseca
 }
 
 func (ss *ShipmentService) CreateShipment(s entities.Shipment) (entities.Shipment, error) {
+	s.S_status = "P"
 	createdShipment, err := ss.repo.CreateShipment(s)
-
 	if err != nil {
 		return entities.Shipment{}, err
 	}
-
 	return createdShipment, nil
 }
 
@@ -61,3 +61,13 @@ func (ss *ShipmentService) GetAllShipments() ([]entities.Shipment, error) {
 
 	return shipmentList, nil
 }
+
+func (ss *ShipmentService) GetShipmentByOrderID(orderId int) (entities.Shipment, error) {
+	shipment, err := ss.repo.GetShipmentByOrderID(orderId)	
+
+	if err != nil {
+		return entities.Shipment{}, err
+	}
+
+	return shipment, nil
+	}

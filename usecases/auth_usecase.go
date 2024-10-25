@@ -18,7 +18,7 @@ type AuthService struct {
 	repo repositories.UserRepository
 }
 
-func ProvideAuthService(repo repositories.UserRepository) AuthUsecase {
+func InitiateAuthService(repo repositories.UserRepository) AuthUsecase {
 	return &AuthService{
 		repo: repo,
 	}
@@ -53,6 +53,9 @@ func (a *AuthService) Register(user *entities.User) error {
 	}
 
 	user.Password = string(hashedPassword)
+	user.Status = "A"
+	user.Role = 1
+	user.TierRank = 1
 
 	if err := a.repo.CreateUser(user); err != nil {
 		return errors.New("can not create user, try again later")

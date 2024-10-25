@@ -11,8 +11,4 @@ type Order struct {
 	O_total_price float64     `gorm:"not null" json:"o_total_price"`     // Not-null constraint
 	UserID        int         `gorm:"not null" json:"userID"`            // Foreign key with not-null
 	User          User        `gorm:"foreignKey:UserID"`                 // Foreign key association
-	ShipmentID    *int        `gorm:"default:null" json:"shipmentID"`    // Nullable foreign key
-	Shipment      Shipment    `gorm:"foreignKey:ShipmentID"`             // Foreign key association
-	TransactionID *int        `gorm:"default:null" json:"transactionID"` // Nullable foreign key
-	Transaction   Transaction `gorm:"foreignKey:TransactionID"`          // Foreign key association
 }

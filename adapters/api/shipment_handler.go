@@ -82,3 +82,16 @@ func (sh *ShipmentHandler) GetAllShipments(c *fiber.Ctx) error {
 
 	return c.JSON(shipments)
 }
+
+func (sh *ShipmentHandler) GetShipmentByOrderID(c *fiber.Ctx) error {	
+	idParams, err := strconv.Atoi(c.Params("order_id"))	
+	if err != nil {
+		return errors.New(err.Error())
+	}
+
+	shipment, err := sh.ShipmentUsecase.GetShipmentByOrderID(idParams)
+	if err != nil {
+		return errors.New(err.Error())
+	}
+	return c.JSON(shipment)
+}

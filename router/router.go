@@ -95,6 +95,7 @@ func SetUpRouters(app *fiber.App, db *gorm.DB) {
 	app.Post("/shipments", handlers.ShipmentHandler.CreateShipment)
 	app.Get("/shipments", handlers.ShipmentHandler.GetAllShipments)
 	app.Get("/shipment/:id", handlers.ShipmentHandler.GetShipmentByID)
+	app.Get("/shipment/order/:order_id", handlers.ShipmentHandler.GetShipmentByOrderID)
 	app.Put("/shipment/:id", handlers.ShipmentHandler.UpdateShipment)
 
 	//Order

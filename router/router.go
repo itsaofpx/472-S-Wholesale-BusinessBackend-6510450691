@@ -25,6 +25,10 @@ func SetUpRouters(app *fiber.App, db *gorm.DB) {
 	authService := usecases.InitiateAuthService(userRepo)
 	authHandler := api.InitiateAuthHandler(authService)
 
+	adminService := usecases.InitiateAdminService(userRepo)
+	adminHandler := api.InitiateAdminHandler(adminService)
+	adminHandler.InitializeAdmin()
+
 	shipmentRepo := database.InitiateShipmentPostgresRepository(db)
 	shipmentService := usecases.InitiateShipmentService(shipmentRepo)
 	shipmentHandler := api.InitiateShipmentHandler(shipmentService)
@@ -58,7 +62,7 @@ func SetUpRouters(app *fiber.App, db *gorm.DB) {
 		userHandler, productHandler, transactionHandler,
 		authHandler, shipmentHandler, orderHandler,
 		packageHandler, orderLineHandler, supplierHandler,
-		supplierOrderListHandler, tierListHandler)
+		supplierOrderListHandler, tierListHandler, adminHandler)
 
 	app.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("Hello, World!")

@@ -93,3 +93,17 @@ func (ops *OrderLinePostgresRepository) DeleteOrderLine(id int) error {
 
 	return nil
 }
+
+func (ops *OrderLinePostgresRepository) GetOrderLineByOrderIDAndProductID(orderID int, productID int) (entities.OrderLine, error) {
+	query := "SELECT id, order_id, product_id, price, quantity FROM public.order_lines WHERE order_id = $1 AND product_id = $2;"
+
+	var orderLine entities.OrderLine
+
+	result := ops.db.Raw(query, orderID, productID).Scan(&orderLine)
+
+	if result.Error != nil {
+		return entities.OrderLine{}, result.Error
+	}
+
+	return orderLine, nil
+}

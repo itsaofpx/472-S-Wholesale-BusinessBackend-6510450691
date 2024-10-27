@@ -11,6 +11,7 @@ type OrderLineUsecase interface {
 	UpdateOrderLine(id int, ol entities.OrderLine) (entities.OrderLine, error)
 	GetOrderLineByID(id int) (entities.OrderLine, error)
 	GetOrderLinesByOrderID(id int) ([]entities.OrderLine, error)
+	GetOrderLineByOrderIDAndProductID(orderID int, productID int) (entities.OrderLine, error)
 	GetAllOrderLines() ([]entities.OrderLine, error)
 	DeleteOrderLine(id int) error
 }
@@ -97,4 +98,14 @@ func (os *OrderLineService) CreateOrderLines(ols []entities.OrderLine) ([]entiti
     }
 
     return createdOrderLines, nil
+}
+
+func (os *OrderLineService) GetOrderLineByOrderIDAndProductID(orderID int, productID int) (entities.OrderLine, error) {
+	orderLine, err := os.repo.GetOrderLineByOrderIDAndProductID(orderID, productID)
+
+	if err != nil {
+		return entities.OrderLine{}, err
+	}
+
+	return orderLine, nil
 }

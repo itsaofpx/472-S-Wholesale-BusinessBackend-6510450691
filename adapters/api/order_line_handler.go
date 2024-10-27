@@ -137,3 +137,22 @@ func (olh *OrderLineHandler) CreateOrderLines(c *fiber.Ctx) error {
 
 	return c.JSON(createdOrderLines)
 }
+
+func (olh *OrderLineHandler) GetOrderLineByOrderIDAndProductID(c *fiber.Ctx) error {
+	orderID, err := strconv.Atoi(c.Params("orderID"))
+	if err != nil {
+		return errors.New(err.Error())
+	}
+	productID, err := strconv.Atoi(c.Params("productID"))
+	if err != nil {
+		return errors.New(err.Error())
+	}
+
+	orderLine, err := olh.OrderLineUsecase.GetOrderLineByOrderIDAndProductID(orderID, productID)
+
+	if err != nil {
+		return errors.New(err.Error())
+	}
+
+	return c.JSON(orderLine)
+	}

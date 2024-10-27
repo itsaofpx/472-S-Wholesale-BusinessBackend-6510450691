@@ -17,17 +17,13 @@ func InitiateOrderLinePostgresRepository(db *gorm.DB) repositories.OrderLineRepo
 }
 
 func (ops *OrderLinePostgresRepository) CreateOrderLine(ol entities.OrderLine) (entities.OrderLine, error) {
-	query := "INSERT INTO public.order_lines(order_id, product_id, price, quantity) VALUES ($1, $2, $3, $4) RETURNING id, order_id, product_id, price, quantity;"
-
-	var orderLine entities.OrderLine
-
-	result := ops.db.Raw(query, ol.OrderID, ol.ProductID, ol.Price, ol.Quantity).Scan(&orderLine)
-
-	if result.Error != nil {
-		return entities.OrderLine{}, result.Error
-	}
-
-	return orderLine, nil
+    query := "INSERT INTO public.order_lines(order_id, product_id, price, quantity) VALUES ($1, $2, (SELECT p_price FROM public.products WHERE id = $2) * $3, $3) RETURNING id, order_id, product_id, quantity;"
+    var orderLine entities.OrderLine
+    result := ops.db.Raw(query, ol.OrderID, ol.ProductID, ol.Quantity).Scan(&orderLine)
+    if result.Error != nil {
+        return entities.OrderLine{}, result.Error
+    }
+    return orderLine, nil
 }
 
 func (ops *OrderLinePostgresRepository) UpdateOrderLine(id int, ol entities.OrderLine) (entities.OrderLine, error) {

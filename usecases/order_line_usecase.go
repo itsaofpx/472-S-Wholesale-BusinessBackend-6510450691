@@ -7,6 +7,7 @@ import (
 
 type OrderLineUsecase interface {
 	CreateOrderLine(ol entities.OrderLine) (entities.OrderLine, error)
+	CreateOrderLines(ols []entities.OrderLine) ([]entities.OrderLine, error)
 	UpdateOrderLine(id int, ol entities.OrderLine) (entities.OrderLine, error)
 	GetOrderLineByID(id int) (entities.OrderLine, error)
 	GetOrderLinesByOrderID(id int) ([]entities.OrderLine, error)
@@ -82,4 +83,18 @@ func (os *OrderLineService) DeleteOrderLine(id int) error {
 	}
 
 	return nil
+}
+
+func (os *OrderLineService) CreateOrderLines(ols []entities.OrderLine) ([]entities.OrderLine, error) {
+    var createdOrderLines []entities.OrderLine
+
+    for _, ol := range ols {
+        createdOrderLine, err := os.repo.CreateOrderLine(ol)
+        if err != nil {
+            return createdOrderLines, err // Return the partially created slice and the error
+        }
+        createdOrderLines = append(createdOrderLines, createdOrderLine)
+    }
+
+    return createdOrderLines, nil
 }

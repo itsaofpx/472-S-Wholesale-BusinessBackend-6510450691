@@ -120,3 +120,20 @@ func (olh *OrderLineHandler) DeleteOrderLine(c *fiber.Ctx) error {
 
 	return c.SendStatus(fiber.StatusOK)
 }
+
+func (olh *OrderLineHandler) CreateOrderLines(c *fiber.Ctx) error {
+	var newOrderLines []entities.OrderLine // Change to a slice to accept multiple order lines
+
+	if err := c.BodyParser(&newOrderLines); err != nil {
+		return errors.New(err.Error())
+	}
+
+	// Assuming your CreateOrderLine function can handle multiple order lines
+	createdOrderLines, err := olh.OrderLineUsecase.CreateOrderLines(newOrderLines) // Adjusted to handle slice
+
+	if err != nil {
+		return errors.New(err.Error())
+	}
+
+	return c.JSON(createdOrderLines)
+}

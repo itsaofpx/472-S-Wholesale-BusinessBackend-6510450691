@@ -2,15 +2,15 @@ package usecases
 
 import (
 	"errors"
-	"fmt"
 
 	"github.com/ppwlsw/sa-project-backend/domain/entities"
+	"github.com/ppwlsw/sa-project-backend/domain/response"
 	"github.com/ppwlsw/sa-project-backend/usecases/repositories"
 	"golang.org/x/crypto/bcrypt"
 )
 
 type AuthUsecase interface {
-	Login(email string, password string) error
+	Login(email string, password string) (err error, res *response.AuthResponse)
 	Register(user *entities.User) error
 }
 
@@ -24,24 +24,24 @@ func InitiateAuthService(repo repositories.UserRepository) AuthUsecase {
 	}
 }
 
-func (a *AuthService) Login(email string, password string) error {
+func (a *AuthService) Login(email string, password string) (err error, res *response.AuthResponse) {
 	existUser, err := a.repo.FindUserByEmail(email)
 	if err != nil {
-		return errors.New("user not found")
+		return errors.New("user not found"), nil
 	}
 
 	if err := bcrypt.CompareHashAndPassword([]byte(existUser.Password), []byte(password)); err != nil {
-		return errors.New("password doesn't match")
+		return errors.New("password doesn't match"), nil
 	}
 
-	fmt.Println(existUser)
+	var response *response.AuthResponse = &response.AuthResponse{ID: existUser.ID}
 
-	return nil
+	return nil, response
 }
 
 func (a *AuthService) Register(user *entities.User) error {
 	existUser, err := a.repo.FindUserByEmail(user.Email)
-	
+
 	if err != nil || existUser != nil {
 		return errors.New("this email is already used")
 	}

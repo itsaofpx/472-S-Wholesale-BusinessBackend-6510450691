@@ -1,8 +1,10 @@
 package repositories
 
-import "github.com/ppwlsw/sa-project-backend/domain/entities"
+import (
+	"github.com/ppwlsw/sa-project-backend/domain/entities"
+)
 
 type AuthRepository interface {
-	Login(email string, password string) error 
+	Login(email string, password string) error
 	Register(entities.User) error
 }

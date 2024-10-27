@@ -64,3 +64,14 @@ func (ppr *ProductPostgresRepository) GetAllProducts() ([]entities.Product, erro
 
 	return products, nil
 }
+
+func (ppr *ProductPostgresRepository) GetProductByFilter(name string, minprice float64, maxprice float64) ([]entities.Product, error) {
+	var products []entities.Product
+	query := "SELECT id, p_name, p_description, p_location, p_amount, p_price, image_url_1, image_url_2, image_url_3 FROM public.products WHERE p_price >= $1 AND p_price <= $2 AND p_name LIKE $3;"
+	result := ppr.db.Raw(query, minprice, maxprice, name).Scan(&products)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return products, nil
+	
+}

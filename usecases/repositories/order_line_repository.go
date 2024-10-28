@@ -8,5 +8,7 @@ type OrderLineRepository interface {
 	GetOrderLineByID(id int) (entities.OrderLine, error)
 	GetOrderLinesByOrderID(id int) ([]entities.OrderLine, error)
 	GetAllOrderLines() ([]entities.OrderLine, error)
+	GetOrderLineByOrderIDAndProductID(orderID int, productID int) (entities.OrderLine, error)
 	DeleteOrderLine(id int) error
+	
 }

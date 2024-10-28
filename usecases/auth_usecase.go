@@ -26,7 +26,6 @@ func InitiateAuthService(repo repositories.UserRepository) AuthUsecase {
 
 func (a *AuthService) Login(email string, password string) (err error, res *response.AuthResponse) {
 	existUser, err := a.repo.FindUserByEmail(email)
-	print(existUser)
 	if err != nil {
 		return errors.New("user not found"), nil
 	}

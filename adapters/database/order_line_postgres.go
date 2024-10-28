@@ -3,6 +3,7 @@ package database
 import (
 	"github.com/ppwlsw/sa-project-backend/domain/entities"
 	"github.com/ppwlsw/sa-project-backend/usecases/repositories"
+	"github.com/ppwlsw/sa-project-backend/domain/response"
 	"gorm.io/gorm"
 )
 
@@ -54,19 +55,56 @@ func (ops *OrderLinePostgresRepository) GetOrderLineByID(id int) (entities.Order
 	return orderLine, nil
 }
 
-func (ops *OrderLinePostgresRepository) GetOrderLinesByOrderID(id int) ([]entities.OrderLine, error) {
-	query := "SELECT id, order_id, product_id, price, quantity FROM public.order_lines WHERE order_id = $1;"
+func (ops *OrderLinePostgresRepository) GetOrderLinesByOrderID(id int) ([]response.OrderLineResponse, error) {
+	query := `
+		SELECT 
+			order_lines.id, 
+			order_lines.order_id, 
+			order_lines.price, 
+			order_lines.product_id, 
+			order_lines.quantity, 
+			products.image_url_1 AS product_img, 
+			products.p_name AS product_name, 
+			products.p_price AS product_price, 
+			products.p_amount AS product_amount
+		FROM 
+			public.order_lines 
+		JOIN 
+			public.products 
+		ON 
+			order_lines.product_id = products.id 
+		WHERE 
+			order_lines.order_id = $1;
+	`
 
-	var orderLines []entities.OrderLine
-
-	result := ops.db.Raw(query, id).Scan(&orderLines)
-
+	var orderLinesWithProduct []response.OrderLineResponse
+	result := ops.db.Raw(query, id).Scan(&orderLinesWithProduct)
+	
 	if result.Error != nil {
 		return nil, result.Error
 	}
 
-	return orderLines, nil
+	var responses []response.OrderLineResponse
+	for _, ol := range orderLinesWithProduct {
+		res := response.OrderLineResponse{
+			ID:            ol.ID,
+			OrderID:       ol.OrderID,
+			ProductID:     ol.ProductID,
+			Price:         ol.Price,
+			Quantity:      ol.Quantity,
+			ProductImg:    ol.ProductImg,
+			ProductName:   ol.ProductName,
+			ProductPrice:  ol.ProductPrice,
+			ProductAmount: ol.ProductAmount,
+		}
+		responses = append(responses, res)
+	}
+
+	return responses, nil
 }
+
+
+
 
 func (ops *OrderLinePostgresRepository) GetAllOrderLines() ([]entities.OrderLine, error) {
 	query := "SELECT id, order_id, product_id, price, quantity FROM public.order_lines;"

@@ -3,6 +3,7 @@ package usecases
 import (
 	"github.com/ppwlsw/sa-project-backend/domain/entities"
 	"github.com/ppwlsw/sa-project-backend/usecases/repositories"
+	"github.com/ppwlsw/sa-project-backend/domain/response"
 )
 
 type OrderLineUsecase interface {
@@ -10,7 +11,7 @@ type OrderLineUsecase interface {
 	CreateOrderLines(ols []entities.OrderLine) ([]entities.OrderLine, error)
 	UpdateOrderLine(id int, ol entities.OrderLine) (entities.OrderLine, error)
 	GetOrderLineByID(id int) (entities.OrderLine, error)
-	GetOrderLinesByOrderID(id int) ([]entities.OrderLine, error)
+	GetOrderLinesByOrderID(id int) ([]response.OrderLineResponse, error)
 	GetOrderLineByOrderIDAndProductID(orderID int, productID int) (entities.OrderLine, error)
 	GetAllOrderLines() ([]entities.OrderLine, error)
 	DeleteOrderLine(id int) error
@@ -56,7 +57,7 @@ func (os *OrderLineService) GetOrderLineByID(id int) (entities.OrderLine, error)
 	return orderLine, nil
 }
 
-func (os *OrderLineService) GetOrderLinesByOrderID(id int) ([]entities.OrderLine, error) {
+func (os *OrderLineService) GetOrderLinesByOrderID(id int) ([]response.OrderLineResponse, error) {
 	orderLines, err := os.repo.GetOrderLinesByOrderID(id)
 
 	if err != nil {

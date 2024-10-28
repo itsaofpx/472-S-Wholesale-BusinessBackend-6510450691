@@ -33,8 +33,8 @@ func (a *AuthService) Login(email string, password string) (err error, res *resp
 	if err := bcrypt.CompareHashAndPassword([]byte(existUser.Password), []byte(password)); err != nil {
 		return errors.New("password doesn't match"), nil
 	}
-
-	var response *response.AuthResponse = &response.AuthResponse{ID: existUser.ID}
+	
+	var response *response.AuthResponse = &response.AuthResponse{ID: existUser.ID, Role: existUser.Role, TierRank: existUser.TierRank}
 
 	return nil, response
 }

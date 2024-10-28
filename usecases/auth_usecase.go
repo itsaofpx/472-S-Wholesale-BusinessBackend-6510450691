@@ -2,7 +2,7 @@ package usecases
 
 import (
 	"errors"
-
+	"regexp"
 	"github.com/ppwlsw/sa-project-backend/domain/entities"
 	"github.com/ppwlsw/sa-project-backend/domain/response"
 	"github.com/ppwlsw/sa-project-backend/usecases/repositories"
@@ -45,6 +45,21 @@ func (a *AuthService) Register(user *entities.User) error {
 	if err != nil || existUser != nil {
 		return errors.New("this email is already used")
 	}
+
+	if !regexp.MustCompile(`^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`).MatchString(user.Email) {
+		return errors.New("invalid email")
+	}
+
+	if !regexp.MustCompile(`^(0(6|8|9)\d{8}|0(2|[3-9])\d{7})$`).MatchString(user.PhoneNumber) {
+		return errors.New("invalid phone number")
+	}
+
+	if !regexp.MustCompile(`^\d{13}$`).MatchString(user.CredentialID) {
+		return errors.New("invalid credential id")
+	}
+
+
+	
 
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 

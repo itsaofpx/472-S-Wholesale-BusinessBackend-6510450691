@@ -3,7 +3,6 @@ package api
 import (
 	"errors"
 	"strconv"
-
 	"github.com/gofiber/fiber/v2"
 	"github.com/ppwlsw/sa-project-backend/domain/entities"
 	"github.com/ppwlsw/sa-project-backend/usecases"
@@ -61,6 +60,19 @@ func (ph *ProductHandler) GetAllProducts(c *fiber.Ctx) error {
 	return c.JSON(products)
 }
 
+func (ph *ProductHandler) GetProductByFilter(c *fiber.Ctx) error {
+	name := c.Params("name")
+	minprice, _ := strconv.ParseFloat(c.Params("min"), 64)
+	maxprice, _ := strconv.ParseFloat(c.Params("max"), 64)
+	products, err := ph.ProductUsecase.GetProductByFilter(name, minprice, maxprice)
+
+	if err != nil {
+		return c.SendStatus(fiber.StatusBadRequest)
+	}
+
+	return c.JSON(products)
+	}
+
 func (ph *ProductHandler) UpdateProduct(c *fiber.Ctx) error {
 	productID, err := strconv.Atoi(c.Params("id"))
 
@@ -82,3 +94,20 @@ func (ph *ProductHandler) UpdateProduct(c *fiber.Ctx) error {
 
 	return c.JSON(product)
 }
+
+func (ph *ProductHandler) CreateProducts(c *fiber.Ctx) error {
+	var products []entities.Product
+
+	if err := c.BodyParser(&products); err != nil {
+		return c.SendStatus(fiber.StatusBadRequest)
+	}
+
+	p ,err := ph.ProductUsecase.CreateProducts(products)
+	if err != nil {
+		return c.SendStatus(fiber.StatusBadRequest)
+	}
+
+	return c.JSON(p)
+	}
+
+

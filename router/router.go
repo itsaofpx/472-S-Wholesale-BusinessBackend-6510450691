@@ -77,9 +77,11 @@ func SetUpRouters(app *fiber.App, db *gorm.DB) {
 	app.Get("/discount/:id", handlers.TierListHandler.GetDiscountPercentByUserID)
 
 	//Product
-	app.Post("/products", handlers.ProductHandler.CreateProduct)
+	app.Post("/product", handlers.ProductHandler.CreateProduct)
+	app.Post("/products", handlers.ProductHandler.CreateProducts)
 	app.Get("/products", handlers.ProductHandler.GetAllProducts)
 	app.Get("product/:id", handlers.ProductHandler.GetProductByID)
+	app.Get("/product/filter/:name/:min/:max", handlers.ProductHandler.GetProductByFilter)
 	app.Put("products/:id", handlers.ProductHandler.UpdateProduct)
 
 	//Transaction

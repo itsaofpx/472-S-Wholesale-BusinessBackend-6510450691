@@ -1,13 +1,15 @@
 package usecases
 
 import (
-	"github.com/ppwlsw/sa-project-backend/domain/entities"
-	"github.com/ppwlsw/sa-project-backend/usecases/repositories"
 	"time"
+
+	"github.com/ppwlsw/sa-project-backend/domain/entities"
+	"github.com/ppwlsw/sa-project-backend/domain/response"
+	"github.com/ppwlsw/sa-project-backend/usecases/repositories"
 )
 
 type OrderUsecase interface {
-	CreateOrder(o entities.Order) (entities.Order, error)
+	CreateOrder(o entities.Order) (*response.OrderResponse, error)
 	UpdateOrder(id int, o entities.Order) (entities.Order, error)
 	GetOrderByID(id int) (entities.Order, error)
 	GetOrderByUserID(userId int) ([]entities.Order, error)
@@ -24,14 +26,14 @@ func InitiateOrderService(repo repositories.OrderRepository) OrderUsecase {
 	}
 }
 
-func (os *OrderService) CreateOrder(o entities.Order) (entities.Order, error) {
+func (os *OrderService) CreateOrder(o entities.Order) (*response.OrderResponse, error) {
 	o.O_status = "P"
 	o.O_total_price = 0
 	o.O_timestamp = time.Now()
 	createdOrder, err := os.repo.CreateOrder(o)
 
 	if err != nil {
-		return entities.Order{}, err
+		return nil, err
 	}
 
 	return createdOrder, nil
@@ -74,5 +76,5 @@ func (os *OrderService) GetOrderByUserID(userId int) ([]entities.Order, error) {
 		return nil, err
 	}
 
-	return order, nil	
+	return order, nil
 }

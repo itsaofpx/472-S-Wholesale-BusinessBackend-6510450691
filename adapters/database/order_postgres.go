@@ -2,6 +2,7 @@ package database
 
 import (
 	"github.com/ppwlsw/sa-project-backend/domain/entities"
+	"github.com/ppwlsw/sa-project-backend/domain/response"
 	"github.com/ppwlsw/sa-project-backend/usecases/repositories"
 	"gorm.io/gorm"
 )
@@ -16,18 +17,26 @@ func InitiateOrderPostgresRepository(db *gorm.DB) repositories.OrderRepository {
 	}
 }
 
-func (opr *OrderPostgreRepository) CreateOrder(o entities.Order) (entities.Order, error) {
+func (opr *OrderPostgreRepository) CreateOrder(o entities.Order) (*response.OrderResponse, error) {
 	query := "INSERT INTO public.orders(o_status, o_timestamp, o_total_price, user_id) VALUES ($1, $2, $3, $4) RETURNING id, o_status, o_timestamp, o_total_price, user_id;"
 
 	var order entities.Order
 
 	result := opr.db.Raw(query, o.O_status, o.O_timestamp, o.O_total_price, o.UserID).Scan(&order)
 
+	var response = &response.OrderResponse{
+		Id:            order.Id,
+		O_status:      order.O_status,
+		O_timestamp:   order.O_timestamp,
+		O_total_price: order.O_total_price,
+		UserID:        order.UserID,
+	}
+	print(response)
 	if result.Error != nil {
-		return entities.Order{}, result.Error
+		return nil, result.Error
 	}
 
-	return order, nil
+	return response, nil
 }
 
 func (opr *OrderPostgreRepository) UpdateOrder(id int, o entities.Order) (entities.Order, error) {

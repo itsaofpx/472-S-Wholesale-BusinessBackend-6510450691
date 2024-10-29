@@ -98,3 +98,19 @@ func (oh *OrderHandler) GetOrderByUserID(c *fiber.Ctx) error {
 
 	return c.JSON(order)
 }
+
+func (oh *OrderHandler) GetOrderAndUserByID(c *fiber.Ctx) error {
+	idParams, err := strconv.Atoi(c.Params("id"))
+
+	if err != nil {
+		return c.SendStatus(fiber.StatusBadRequest)
+	}
+
+	order, err := oh.OrderUsecase.GetOrderAndUserByID(idParams)
+
+	if err != nil {
+		return c.SendStatus(fiber.StatusBadRequest)
+	}
+
+	return c.JSON(order)
+	}

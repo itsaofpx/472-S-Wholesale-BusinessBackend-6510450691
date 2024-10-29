@@ -2,7 +2,6 @@ package usecases
 
 import (
 	"errors"
-    "fmt"
 	"github.com/ppwlsw/sa-project-backend/domain/entities"
 	"github.com/ppwlsw/sa-project-backend/usecases/repositories"
 )
@@ -65,8 +64,7 @@ func (ps *ProductService) GetAllProducts() ([]entities.Product, error) {
 }
 
 func (ps *ProductService) GetProductByFilter(name string, minprice float64, maxprice float64) ([]entities.Product, error) {
-	fmt.Println("usecase", name, minprice, maxprice)
-	if name == "" || name == "null" {
+	if name == "" {
 		name = "%"
 	} else {
 		name = "%" + name + "%"

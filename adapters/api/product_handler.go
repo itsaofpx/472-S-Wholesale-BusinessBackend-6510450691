@@ -23,16 +23,15 @@ func (ph *ProductHandler) CreateProduct(c *fiber.Ctx) error {
 	var newProduct entities.Product
 
 	if err := c.BodyParser(&newProduct); err != nil {
-		return errors.New(err.Error())
+		return c.SendStatus(fiber.StatusBadRequest)
 	}
 
-	if err := ph.ProductUsecase.CreateProduct(newProduct); err != nil {
-		return errors.New(err.Error())
+	product, err := ph.ProductUsecase.CreateProduct(newProduct);
+	if  err != nil {
+		return c.SendStatus(fiber.StatusBadRequest)
 	}
 
-	return c.JSON(fiber.Map{
-		"message": "Create Product Succesful",
-	})
+	return c.JSON(product)
 }
 
 func (ph *ProductHandler) GetProductByID(c *fiber.Ctx) error {

@@ -56,7 +56,7 @@ func (opr *OrderPostgreRepository) UpdateOrder(id int, o entities.Order) (entiti
 
 
 func (opr *OrderPostgreRepository) GetOrderByID(id int) (entities.Order, error) {
-	query := "SELECT id, o_status, o_timestamp, o_total_price, user_id FROM public.orders WHERE id = $1;"
+	query := "SELECT id, o_status, o_timestamp, o_total_price, user_id, tracking_number FROM public.orders WHERE id = $1;"
 
 	var order entities.Order
 

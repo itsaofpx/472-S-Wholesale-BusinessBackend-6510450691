@@ -72,11 +72,7 @@ func (uh *UserHandler) GetAllUsers(c *fiber.Ctx) error {
 		userResponses = append(userResponses, res)
 	}
 
-	result := response.GetUsersResponse{
-		Users: userResponses,
-	}
-
-	return c.JSON(result)
+	return c.JSON(userResponses)
 }
 
 func (uh *UserHandler) UpdateTierByUserID(c *fiber.Ctx) error {

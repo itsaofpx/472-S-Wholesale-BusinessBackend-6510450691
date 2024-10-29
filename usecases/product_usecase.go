@@ -7,7 +7,7 @@ import (
 )
 
 type ProductUsecase interface {
-	CreateProduct(p entities.Product) error
+	CreateProduct(p entities.Product) (entities.Product, error)
 	CreateProducts(products []entities.Product) ([]entities.Product, error)
 	GetProductByID(id int) (entities.Product, error)
 	GetProductByFilter(name string, minprice float64, maxprice float64) ([]entities.Product, error)
@@ -25,7 +25,7 @@ func InitiateProductsService(repo repositories.ProductRepository) ProductUsecase
 	}
 }
 
-func (ps *ProductService) CreateProduct(p entities.Product) error {
+func (ps *ProductService) CreateProduct(p entities.Product) (entities.Product, error) {
 	if p.Image_url_1 == "" {
 		p.Image_url_1 = "https://img5.pic.in.th/file/secure-sv1/Your-paragraph-message.png"
 	}
@@ -36,11 +36,11 @@ func (ps *ProductService) CreateProduct(p entities.Product) error {
 		p.Image_url_3 = "https://img5.pic.in.th/file/secure-sv1/Your-paragraph-message.png"
 	}
 	
-
-	if err := ps.repo.CreateProduct(p); err != nil {
-		return errors.New(err.Error())
+	product ,err := ps.repo.CreateProduct(p);
+	if  err != nil {
+		return entities.Product{}, errors.New(err.Error())
 	}
-	return nil
+	return product, nil
 }
 
 func (ps *ProductService) GetProductByID(id int) (entities.Product, error) {
@@ -97,11 +97,11 @@ func (ps *ProductService) UpdateProduct(id int, p entities.Product) (entities.Pr
 func (ps *ProductService) CreateProducts(products []entities.Product) ([]entities.Product, error) {
 	var productLS []entities.Product
 	for _, p := range products {
-		err := ps.CreateProduct(p)
+		product,err := ps.CreateProduct(p)
 		if err != nil {
 			return nil, err
 		}
-		productLS = append(productLS, p)
+		productLS = append(productLS, product)
 	}
 	return productLS, nil
 }

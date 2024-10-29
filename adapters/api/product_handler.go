@@ -6,6 +6,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/ppwlsw/sa-project-backend/domain/entities"
 	"github.com/ppwlsw/sa-project-backend/usecases"
+	"github.com/ppwlsw/sa-project-backend/domain/request"
 )
 
 type ProductHandler struct {
@@ -61,10 +62,14 @@ func (ph *ProductHandler) GetAllProducts(c *fiber.Ctx) error {
 }
 
 func (ph *ProductHandler) GetProductByFilter(c *fiber.Ctx) error {
-	name := c.Params("name")
-	minprice, _ := strconv.ParseFloat(c.Params("min"), 64)
-	maxprice, _ := strconv.ParseFloat(c.Params("max"), 64)
-	products, err := ph.ProductUsecase.GetProductByFilter(name, minprice, maxprice)
+	var req request.FilterProductRequest
+
+	if err := c.BodyParser(&req); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "cannot parse request body",
+		})
+	}
+	products, err := ph.ProductUsecase.GetProductByFilter(req.Name, req.MinPrice, req.MaxPrice)
 
 	if err != nil {
 		return c.SendStatus(fiber.StatusBadRequest)

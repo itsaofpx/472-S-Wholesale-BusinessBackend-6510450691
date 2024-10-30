@@ -30,9 +30,11 @@ func (tls *TierListService) GetDiscountPercentByUserID(id int) (*entities.TierLi
 }
 func (tls *TierListService) InitialTierList() error {
 
-	for i := 1; i <= 3; i++ {
+	discountArr := [5]int{0, 10, 15, 20, 30}
+
+	for i := 1; i <= 5; i++ {
 		tier := i
-		discount := i * 10
+		discount := discountArr[i-1]
 
 		var tierList = entities.TierList{
 			Tier:            tier,

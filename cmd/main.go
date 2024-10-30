@@ -25,8 +25,7 @@ func main() {
 	app := fiber.New()
 
 	app.Use(cors.New(cors.Config{
-		AllowMethods: "GET,POST,HEAD,PUT,DELETE", }))
-
+		AllowMethods: "GET,POST,HEAD,PUT,DELETE"}))
 
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
 		"password=%s dbname=%s sslmode=disable",
@@ -44,12 +43,11 @@ func main() {
 
 	db.AutoMigrate(
 		&entities.User{}, &entities.Product{},
-		&entities.Transaction{}, &entities.Shipment{},
-		&entities.Order{}, &entities.Package{},
+		&entities.Transaction{},
+		&entities.Order{},
 		&entities.OrderLine{}, &entities.TierList{},
 		&entities.OrderLine{}, &entities.Supplier{},
 		&entities.SupplierOrderList{})
-
 
 	router.SetUpRouters(app, db)
 

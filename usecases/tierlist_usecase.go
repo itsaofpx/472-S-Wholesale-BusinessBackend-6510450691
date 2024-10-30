@@ -8,6 +8,8 @@ import (
 type TierListUsecase interface {
 	GetDiscountPercentByUserID(id int) (*entities.TierList, error)
 	InitialTierList() error
+	CreateTireList(tierList entities.TierList) (entities.TierList, error)
+	GetAllTierList() ([]entities.TierList, error)
 }
 
 type TierListService struct {
@@ -47,5 +49,26 @@ func (tls *TierListService) InitialTierList() error {
 	}
 
 	return nil
+}
+
+func (tls *TierListService) CreateTireList(tierList entities.TierList) (entities.TierList, error) {
+
+	tierList, err := tls.repo.CreateTireList(tierList)
+
+	if err != nil {
+		return entities.TierList{}, err
+	}
+
+	return tierList, nil
+}
+
+func (tls *TierListService) GetAllTierList() ([]entities.TierList, error) {
+
+	tierList, err := tls.repo.GetAllTierList()
+	if err != nil {
+		return []entities.TierList{}, err
+	}
+
+	return tierList, nil
 
 }

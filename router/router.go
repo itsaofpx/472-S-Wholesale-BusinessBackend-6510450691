@@ -29,13 +29,9 @@ func SetUpRouters(app *fiber.App, db *gorm.DB) {
 	adminHandler := api.InitiateAdminHandler(adminService)
 	adminHandler.InitializeAdmin()
 
-	
-
 	orderRepo := database.InitiateOrderPostgresRepository(db)
 	orderService := usecases.InitiateOrderService(orderRepo)
 	orderHandler := api.InitiateOrderHandler(orderService)
-
-	
 
 	orderLineRepo := database.InitiateOrderLinePostgresRepository(db)
 	orderLineService := usecases.InitiateOrderLineService(orderLineRepo)
@@ -56,8 +52,8 @@ func SetUpRouters(app *fiber.App, db *gorm.DB) {
 
 	handlers := api.ProvideHandlers(
 		userHandler, productHandler, transactionHandler,
-		authHandler,  orderHandler,
-		 orderLineHandler, supplierHandler,
+		authHandler, orderHandler,
+		orderLineHandler, supplierHandler,
 		supplierOrderListHandler, tierListHandler, adminHandler)
 
 	app.Get("/", func(c *fiber.Ctx) error {
@@ -78,6 +74,8 @@ func SetUpRouters(app *fiber.App, db *gorm.DB) {
 	app.Post("/products/filter", handlers.ProductHandler.GetProductByFilter)
 	app.Get("/products", handlers.ProductHandler.GetAllProducts)
 	app.Get("product/:id", handlers.ProductHandler.GetProductByID)
+	app.Put("/product/buy", handlers.ProductHandler.BuyProduct)
+	app.Put("/products/buy", handlers.ProductHandler.BuyProducts)
 	app.Put("products/:id", handlers.ProductHandler.UpdateProduct)
 
 	//Transaction
@@ -92,7 +90,6 @@ func SetUpRouters(app *fiber.App, db *gorm.DB) {
 	app.Post("/register", handlers.AuthHandler.Register)
 	app.Post("/login", handlers.AuthHandler.Login)
 
-
 	//Order
 	app.Post("/order", handlers.OrderHandler.CreateOrder)
 	app.Post("/orders", handlers.OrderHandler.CreateOrder)
@@ -101,8 +98,6 @@ func SetUpRouters(app *fiber.App, db *gorm.DB) {
 	app.Get("/order/user/:id", handlers.OrderHandler.GetOrderByUserID)
 	app.Get("/order/user/detail/:id", handlers.OrderHandler.GetOrderAndUserByID)
 	app.Put("/order/:id", handlers.OrderHandler.UpdateOrder)
-
-	
 
 	//OrderLine
 	app.Post("/orderLine", orderLineHandler.CreateOrderLine)

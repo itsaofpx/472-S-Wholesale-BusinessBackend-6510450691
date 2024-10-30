@@ -2,7 +2,9 @@ package usecases
 
 import (
 	"errors"
+
 	"github.com/ppwlsw/sa-project-backend/domain/entities"
+	"github.com/ppwlsw/sa-project-backend/domain/request"
 	"github.com/ppwlsw/sa-project-backend/usecases/repositories"
 )
 
@@ -13,10 +15,44 @@ type ProductUsecase interface {
 	GetProductByFilter(name string, minprice float64, maxprice float64) ([]entities.Product, error)
 	GetAllProducts() ([]entities.Product, error)
 	UpdateProduct(id int, p entities.Product) (entities.Product, error)
+	BuyProduct(req *request.BuyProductRequest) (entities.Product, error)
+	BuyProducts(req []request.BuyProductRequest) ([]entities.Product, error)
+}
+
+func (ps *ProductService) BuyProduct(req *request.BuyProductRequest) (entities.Product, error) {
+	exist, err := ps.GetProductByID(req.ProductID)
+
+	if err != nil {
+		return entities.Product{}, err
+	}
+
+	if exist.P_amount < req.Quantity {
+		return entities.Product{}, errors.New("product is not available")
+	}
+
+	exist.P_amount -= req.Quantity
+	_, err = ps.UpdateProduct(req.ProductID, exist)
+	if err != nil {
+		return entities.Product{}, err
+	}
+
+	return entities.Product{}, nil
 }
 
 type ProductService struct {
 	repo repositories.ProductRepository
+}
+
+func (ps *ProductService) BuyProducts(req []request.BuyProductRequest) ([]entities.Product, error) {
+	var productLS []entities.Product
+	for _, p := range req {
+		product, err := ps.BuyProduct(&p)
+		if err != nil {
+			return nil, err
+		}
+		productLS = append(productLS, product)
+	}
+	return productLS, nil
 }
 
 func InitiateProductsService(repo repositories.ProductRepository) ProductUsecase {
@@ -35,9 +71,9 @@ func (ps *ProductService) CreateProduct(p entities.Product) (entities.Product, e
 	if p.Image_url_3 == "" {
 		p.Image_url_3 = "https://img5.pic.in.th/file/secure-sv1/Your-paragraph-message.png"
 	}
-	
-	product ,err := ps.repo.CreateProduct(p);
-	if  err != nil {
+
+	product, err := ps.repo.CreateProduct(p)
+	if err != nil {
 		return entities.Product{}, errors.New(err.Error())
 	}
 	return product, nil
@@ -97,7 +133,7 @@ func (ps *ProductService) UpdateProduct(id int, p entities.Product) (entities.Pr
 func (ps *ProductService) CreateProducts(products []entities.Product) ([]entities.Product, error) {
 	var productLS []entities.Product
 	for _, p := range products {
-		product,err := ps.CreateProduct(p)
+		product, err := ps.CreateProduct(p)
 		if err != nil {
 			return nil, err
 		}
@@ -105,4 +141,3 @@ func (ps *ProductService) CreateProducts(products []entities.Product) ([]entitie
 	}
 	return productLS, nil
 }
-

@@ -1,6 +1,8 @@
 package usecases
 
 import (
+	"time"
+
 	"github.com/ppwlsw/sa-project-backend/domain/entities"
 	"github.com/ppwlsw/sa-project-backend/usecases/repositories"
 )
@@ -24,7 +26,9 @@ func InitiateTransactionService(repo repositories.TransactionRepository) Transac
 }
 
 func (ts *TransactionService) CreateTransaction(t entities.Transaction) (entities.Transaction, error) {
+	t.T_time_stamp = time.Now()
 	createdTransaction, err := ts.repo.CreateTransaction(t)
+
 	if err != nil {
 		return entities.Transaction{}, err
 	}

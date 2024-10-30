@@ -31,7 +31,7 @@ func (upr *UserPostgresRepository) GetUserByID(id int) (*entities.User, error) {
 
 	query := "SELECT id, credential_id, f_name, l_name, phone_number, email, password, status, role, tier_rank, address FROM users WHERE id = $1"
 
-	result := upr.db.Raw(query, id).Scan(user)
+	result := upr.db.Raw(query, id).Scan(&user)
 
 	if result.Error != nil {
 		return nil, result.Error

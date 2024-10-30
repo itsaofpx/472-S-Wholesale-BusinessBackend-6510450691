@@ -46,17 +46,17 @@ func (t *TierListPostgres) InitialTierList(tier int, discount float64) (*entitie
 }
 
 func (t *TierListPostgres) CreateTireList(tierList entities.TierList) (entities.TierList, error) {
-	query := "INSERT INTO public.tier_lists(tier, discount_percent) VALUES ($1, $2);"
+	query := "INSERT INTO public.tier_lists(tier, discount_percent) VALUES ($1, $2) RETURNING tier, discount_percent;"
 
-	var createdTierList entities.TierList
+	var newTierList entities.TierList
 
-	result := t.db.Raw(query, tierList.Tier, tierList.DiscountPercent).Scan(&createdTierList)
+	result := t.db.Raw(query, tierList.Tier, tierList.DiscountPercent).Scan(&newTierList)
 
 	if result.Error != nil {
 		return entities.TierList{}, result.Error
 	}
 
-	return createdTierList, nil
+	return newTierList, nil
 }
 
 func (t *TierListPostgres) GetAllTierList() ([]entities.TierList, error) {

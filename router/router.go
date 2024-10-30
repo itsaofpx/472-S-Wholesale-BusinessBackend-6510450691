@@ -67,6 +67,8 @@ func SetUpRouters(app *fiber.App, db *gorm.DB) {
 
 	//Tier
 	app.Get("/discount/:id", handlers.TierListHandler.GetDiscountPercentByUserID)
+	app.Post("/tierlist", handlers.TierListHandler.CreateTierList)
+	app.Get("/tierlist", handlers.TierListHandler.GetAllTierList)
 
 	//Product
 	app.Post("/product", handlers.ProductHandler.CreateProduct)

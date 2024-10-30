@@ -29,7 +29,6 @@ func InitiateOrderService(repo repositories.OrderRepository) OrderUsecase {
 
 func (os *OrderService) CreateOrder(o entities.Order) (*response.OrderResponse, error) {
 	o.O_status = "P"
-	o.O_total_price = 0
 	o.O_timestamp = time.Now()
 	createdOrder, err := os.repo.CreateOrder(o)
 
@@ -88,4 +87,4 @@ func (os *OrderService) GetOrderAndUserByID(id int) (response.OrderUserResponse,
 	}
 
 	return order, nil
-	}
+}

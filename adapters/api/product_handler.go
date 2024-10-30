@@ -2,11 +2,13 @@ package api
 
 import (
 	"errors"
+	"fmt"
 	"strconv"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/ppwlsw/sa-project-backend/domain/entities"
-	"github.com/ppwlsw/sa-project-backend/usecases"
 	"github.com/ppwlsw/sa-project-backend/domain/request"
+	"github.com/ppwlsw/sa-project-backend/usecases"
 )
 
 type ProductHandler struct {
@@ -26,8 +28,8 @@ func (ph *ProductHandler) CreateProduct(c *fiber.Ctx) error {
 		return c.SendStatus(fiber.StatusBadRequest)
 	}
 
-	product, err := ph.ProductUsecase.CreateProduct(newProduct);
-	if  err != nil {
+	product, err := ph.ProductUsecase.CreateProduct(newProduct)
+	if err != nil {
 		return c.SendStatus(fiber.StatusBadRequest)
 	}
 
@@ -75,7 +77,7 @@ func (ph *ProductHandler) GetProductByFilter(c *fiber.Ctx) error {
 	}
 
 	return c.JSON(products)
-	}
+}
 
 func (ph *ProductHandler) UpdateProduct(c *fiber.Ctx) error {
 	productID, err := strconv.Atoi(c.Params("id"))
@@ -106,12 +108,41 @@ func (ph *ProductHandler) CreateProducts(c *fiber.Ctx) error {
 		return c.SendStatus(fiber.StatusBadRequest)
 	}
 
-	p ,err := ph.ProductUsecase.CreateProducts(products)
+	p, err := ph.ProductUsecase.CreateProducts(products)
 	if err != nil {
 		return c.SendStatus(fiber.StatusBadRequest)
 	}
 
 	return c.JSON(p)
+}
+
+func (ph *ProductHandler) BuyProduct(c *fiber.Ctx) error {
+	var req request.BuyProductRequest
+
+	if err := c.BodyParser(&req); err != nil {
+		return c.JSON(fiber.Map{"MESSAGE": "Cannot parse request body"})
 	}
 
+	product, err := ph.ProductUsecase.BuyProduct(&req)
 
+	if err != nil {
+		return c.JSON(fiber.Map{"MESSAGE": "Can't buy product"})
+	}
+
+	return c.JSON(product)
+}
+
+func (ph *ProductHandler) BuyProducts(c *fiber.Ctx) error {
+	var reqs []request.BuyProductRequest
+
+	if err := c.BodyParser(&reqs); err != nil {
+		return c.JSON(fiber.Map{"MESSAGE": fmt.Sprintf("Error: %v", err)})
+	}
+
+	products, err := ph.ProductUsecase.BuyProducts(reqs)
+	if err != nil {
+		return c.JSON(fiber.Map{"MESSAGE": fmt.Sprintf("Error: %v", err)})
+	}
+
+	return c.JSON(products)
+}

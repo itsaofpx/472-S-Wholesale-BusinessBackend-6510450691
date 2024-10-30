@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/ppwlsw/sa-project-backend/domain/entities"
 	"github.com/ppwlsw/sa-project-backend/usecases"
 )
 
@@ -34,4 +35,29 @@ func (tlh *TierListHandler) GetDiscountPercentByUserID(c *fiber.Ctx) error {
 	return c.JSON(discount)
 }
 
+func (tlh *TierListHandler) CreateTierList(c *fiber.Ctx) error {
+	var newTier entities.TierList
 
+	if err := c.BodyParser(&newTier); err != nil {
+		return errors.New(err.Error())
+	}
+
+	tierList, err := tlh.TierListUsecase.CreateTireList(newTier)
+
+	if err != nil {
+		return errors.New(err.Error())
+
+	}
+
+	return c.JSON(tierList)
+}
+
+func (tlh *TierListHandler) GetAllTierList(c *fiber.Ctx) error {
+	tierLists, err := tlh.TierListUsecase.GetAllTierList()
+
+	if err != nil {
+		return errors.New(err.Error())
+	}
+
+	return c.JSON(tierLists)
+}

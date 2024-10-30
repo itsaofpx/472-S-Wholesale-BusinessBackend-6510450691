@@ -3,7 +3,7 @@ package api
 import (
 	"errors"
 	"strconv"
-
+	"github.com/ppwlsw/sa-project-backend/domain/request"
 	"github.com/gofiber/fiber/v2"
 	"github.com/ppwlsw/sa-project-backend/domain/entities"
 	"github.com/ppwlsw/sa-project-backend/usecases"
@@ -114,3 +114,21 @@ func (oh *OrderHandler) GetOrderAndUserByID(c *fiber.Ctx) error {
 
 	return c.JSON(order)
 	}
+
+func (oh *OrderHandler) UpdateOrderStatus(c *fiber.Ctx) error {
+	
+	var req request.UpdateOrderStatusRequest
+
+	if err := c.BodyParser(&req); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "cannot parse request body",
+		})
+	}
+
+	_, err := oh.OrderUsecase.UpdateOrderStatus(req.ID, req.Status)
+
+	if err != nil {
+		return c.SendStatus(fiber.StatusBadRequest)
+	}
+	return nil
+}

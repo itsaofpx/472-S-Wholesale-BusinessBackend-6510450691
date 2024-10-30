@@ -11,6 +11,7 @@ import (
 type OrderUsecase interface {
 	CreateOrder(o entities.Order) (*response.OrderResponse, error)
 	UpdateOrder(id int, o entities.Order) (entities.Order, error)
+	UpdateOrderStatus(id int, status string) (entities.Order, error)
 	GetOrderByID(id int) (entities.Order, error)
 	GetOrderByUserID(userId int) ([]entities.Order, error)
 	GetOrderAndUserByID(id int) (response.OrderUserResponse, error)
@@ -88,3 +89,18 @@ func (os *OrderService) GetOrderAndUserByID(id int) (response.OrderUserResponse,
 
 	return order, nil
 }
+
+func (os *OrderService) UpdateOrderStatus(id int, status string) (entities.Order, error) {
+	order, err := os.GetOrderByID(id)
+	if err != nil {
+		return entities.Order{}, err
+	}
+	order.O_status = status
+	_, err = os.UpdateOrder(id, order)
+
+	if err != nil {
+		return entities.Order{}, err
+	}
+
+	return order, nil
+	}

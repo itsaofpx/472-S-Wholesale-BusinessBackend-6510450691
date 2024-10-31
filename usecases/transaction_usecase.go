@@ -13,6 +13,7 @@ type TransactionUsecase interface {
 	GetTransactionByOrderId(orderId int) (entities.Transaction, error)
 	GetAllTransactions() ([]entities.Transaction, error)
 	UpdateTransaction(id int, t entities.Transaction) (entities.Transaction, error)
+	DeleteTransaction(id int) error
 }
 
 type TransactionService struct {
@@ -66,4 +67,12 @@ func (ts *TransactionService) GetTransactionByOrderId(orderId int) (entities.Tra
 		return entities.Transaction{}, err
 	}
 	return t, nil
+}
+
+func (ts *TransactionService) DeleteTransaction(id int) error {
+	err := ts.repo.DeleteTransaction(id)
+	if err != nil {
+		return err
+	}
+	return nil
 }

@@ -97,3 +97,18 @@ func (th *TransactionHandler) GetTransactionByOrderId(c *fiber.Ctx) error {
     return c.JSON(transaction)
 }
 
+func (th *TransactionHandler) DeleteTransaction(c *fiber.Ctx) error {
+	transactionID, err := strconv.Atoi(c.Params("id"))
+
+	if err != nil {
+		return c.SendStatus(fiber.StatusBadRequest)
+	}
+
+	err = th.TransactionUsecase.DeleteTransaction(transactionID)
+
+	if err != nil {
+		return c.SendStatus(fiber.StatusBadRequest)	
+	}	
+
+	return c.SendStatus(fiber.StatusOK)
+	}

@@ -8,4 +8,5 @@ type TransactionRepository interface {
 	GetTransactionByOrderId(orderId int) (entities.Transaction, error)
 	GetAllTransactions() ([]entities.Transaction, error)
 	UpdateTransaction(id int, t entities.Transaction) (entities.Transaction, error)
+	DeleteTransaction(id int) error
 }

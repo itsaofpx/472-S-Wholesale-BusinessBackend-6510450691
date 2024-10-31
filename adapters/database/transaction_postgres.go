@@ -86,3 +86,16 @@ func (tpr *TransactionPostgresRepository) GetTransactionByOrderId(orderId int) (
 
     return transaction, nil
 }
+
+func (tpr *TransactionPostgresRepository) DeleteTransaction(id int) error {
+    query := "DELETE FROM public.transactions WHERE id = $1;"
+
+    result := tpr.db.Exec(query, id)
+
+    if result.Error != nil {
+        return result.Error
+    }    
+
+    return nil
+}
+

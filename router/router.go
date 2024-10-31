@@ -87,6 +87,7 @@ func SetUpRouters(app *fiber.App, db *gorm.DB) {
 	app.Get("/transaction/:id", handlers.TransactionHandler.GetTransactionById)
 	app.Get("/transaction/order/:order_id", handlers.TransactionHandler.GetTransactionByOrderId)
 	app.Put("/transaction/:id", handlers.TransactionHandler.UpdateTransaction)
+	app.Delete("/transaction/:id", handlers.TransactionHandler.DeleteTransaction)
 
 	//Auth
 	app.Post("/register", handlers.AuthHandler.Register)

@@ -50,16 +50,21 @@ func SetUpRouters(app *fiber.App, db *gorm.DB) {
 	supplierOrderListService := usecases.InitiateSupplierOrderListService(supplierOrderListRepo)
 	supplierOrderListHandler := api.InitiateSupplierOrderListHandler(supplierOrderListService)
 
+	creditcardRepo := database.InitiateCreditCardPostgresRepository(db)
+	creditcardService := usecases.InitiateCreditCardService(creditcardRepo)
+	creditcardHandler := api.InitiateCreditCardHandler(creditcardService)
+
 	handlers := api.ProvideHandlers(
 		userHandler, productHandler, transactionHandler,
 		authHandler, orderHandler,
 		orderLineHandler, supplierHandler,
-		supplierOrderListHandler, tierListHandler, adminHandler)
+		supplierOrderListHandler, tierListHandler, adminHandler,creditcardHandler,
+	)
 
 	app.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("Hello, World!")
 	})
-
+	
 	//User
 	app.Get("/users", handlers.UserHandler.GetAllUsers)
 	app.Get("/users/:id", handlers.UserHandler.GetUserByID)
@@ -126,6 +131,11 @@ func SetUpRouters(app *fiber.App, db *gorm.DB) {
 	app.Get("supplierOrderLists", supplierOrderListHandler.GetAllSupplierOrderLists)
 	app.Put("/supplierOrderLists/:id", supplierOrderListHandler.UpdateSupplierOrderList)
 
-	
+	// CreditCard
+	app.Post("/creditcard", handlers.CreditCardHandler.CreateCreditCard)
+	app.Get("/creditcard/:email", handlers.CreditCardHandler.GetCreditCardByEmail)
+	app.Put("/creditcard/:email", handlers.CreditCardHandler.UpdateCreditCardByEmail)
+	app.Delete("/creditcard/:email", handlers.CreditCardHandler.DeleteCreditCardByEmail)
+
 
 }

@@ -11,14 +11,21 @@ type Handlers struct {
 	SupplierHandler          *SupplierHandler
 	SupplierOrderListHandler *SupplierOrderListHandler
 	AdminHandler             *AdminHandler
+	CreditCardHandler        *CreditCardHandler
 }
 
-func ProvideHandlers(UserHandler *UserHandler, ProductHandler *ProductHandler,
-	TransactionHandler *TransactionHandler, AuthHandler *AuthHandler,
+func ProvideHandlers(
+	UserHandler *UserHandler,
+	ProductHandler *ProductHandler,
+	TransactionHandler *TransactionHandler,
+	AuthHandler *AuthHandler,
 	OrderHandler *OrderHandler,
 	OrderLineHandler *OrderLineHandler,
-	SupplierHandler *SupplierHandler, SupplierOrderListHandler *SupplierOrderListHandler,
-	TierListHandler *TierListHandler, AdminHandler *AdminHandler) *Handlers {
+	SupplierHandler *SupplierHandler,
+	SupplierOrderListHandler *SupplierOrderListHandler,
+	TierListHandler *TierListHandler,
+	AdminHandler *AdminHandler,
+	CreditCardHandler *CreditCardHandler) *Handlers {
 	return &Handlers{
 		UserHandler:              UserHandler,
 		ProductHandler:           ProductHandler,
@@ -30,5 +37,6 @@ func ProvideHandlers(UserHandler *UserHandler, ProductHandler *ProductHandler,
 		SupplierOrderListHandler: SupplierOrderListHandler,
 		TierListHandler:          TierListHandler,
 		AdminHandler:             AdminHandler,
+		CreditCardHandler:        CreditCardHandler,
 	}
 }

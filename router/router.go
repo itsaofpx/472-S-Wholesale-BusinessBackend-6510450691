@@ -125,4 +125,7 @@ func SetUpRouters(app *fiber.App, db *gorm.DB) {
 	app.Get("/suppliers/:supplierID/supplierOrderLists", supplierOrderListHandler.GetSupplierOrderListsBySupplierID)
 	app.Get("supplierOrderLists", supplierOrderListHandler.GetAllSupplierOrderLists)
 	app.Put("/supplierOrderLists/:id", supplierOrderListHandler.UpdateSupplierOrderList)
+
+	
+
 }

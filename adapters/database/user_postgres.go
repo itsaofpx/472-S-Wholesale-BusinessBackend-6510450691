@@ -56,7 +56,7 @@ func (upr *UserPostgresRepository) GetAllUsers() (*[]entities.User, error) {
 
 func (upr *UserPostgresRepository) FindUserByEmail(email string) (*entities.User, error) {
 	query := "SELECT id, credential_id, f_name, l_name, phone_number, email, password, status, role, tier_rank, address FROM users WHERE email = $1"
-	var user *entities.User
+	user := &entities.User{}
 
 	result := upr.db.Raw(query, email).Scan(&user)
 

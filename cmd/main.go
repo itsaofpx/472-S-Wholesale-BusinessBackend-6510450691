@@ -47,7 +47,9 @@ func main() {
 		&entities.Order{},
 		&entities.OrderLine{}, &entities.TierList{},
 		&entities.OrderLine{}, &entities.Supplier{},
-		&entities.SupplierOrderList{})
+		&entities.SupplierOrderList{}, &entities.Chat{},
+		&entities.Message{},
+	)
 
 	router.SetUpRouters(app, db)
 

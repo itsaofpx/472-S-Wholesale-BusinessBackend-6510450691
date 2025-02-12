@@ -11,6 +11,8 @@ type Handlers struct {
 	SupplierHandler          *SupplierHandler
 	SupplierOrderListHandler *SupplierOrderListHandler
 	AdminHandler             *AdminHandler
+	ChatHandler              *ChatHandler
+	MessageHandler           *MessageHandler
 }
 
 func ProvideHandlers(UserHandler *UserHandler, ProductHandler *ProductHandler,
@@ -18,7 +20,7 @@ func ProvideHandlers(UserHandler *UserHandler, ProductHandler *ProductHandler,
 	OrderHandler *OrderHandler,
 	OrderLineHandler *OrderLineHandler,
 	SupplierHandler *SupplierHandler, SupplierOrderListHandler *SupplierOrderListHandler,
-	TierListHandler *TierListHandler, AdminHandler *AdminHandler) *Handlers {
+	TierListHandler *TierListHandler, AdminHandler *AdminHandler, ChatHandler *ChatHandler, MessageHandler *MessageHandler) *Handlers {
 	return &Handlers{
 		UserHandler:              UserHandler,
 		ProductHandler:           ProductHandler,
@@ -30,5 +32,7 @@ func ProvideHandlers(UserHandler *UserHandler, ProductHandler *ProductHandler,
 		SupplierOrderListHandler: SupplierOrderListHandler,
 		TierListHandler:          TierListHandler,
 		AdminHandler:             AdminHandler,
+		ChatHandler:              ChatHandler,
+		MessageHandler:           MessageHandler,
 	}
 }

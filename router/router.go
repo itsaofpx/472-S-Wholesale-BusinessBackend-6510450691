@@ -50,11 +50,18 @@ func SetUpRouters(app *fiber.App, db *gorm.DB) {
 	supplierOrderListService := usecases.InitiateSupplierOrderListService(supplierOrderListRepo)
 	supplierOrderListHandler := api.InitiateSupplierOrderListHandler(supplierOrderListService)
 
+	chatRepo := database.InitiateChatPostgresRepository(db)
+	chatService := usecases.InitiateChatService(chatRepo)
+	chatHandler := api.InitiateChatHandler(chatService)
+
+	messageRepo := database.InitiateMessagePostgresRepository(db)
+	messageService := usecases.InitiateMessageService(messageRepo)
+	messageHandler := api.InitiateMessageHandler(messageService)
 	handlers := api.ProvideHandlers(
 		userHandler, productHandler, transactionHandler,
 		authHandler, orderHandler,
 		orderLineHandler, supplierHandler,
-		supplierOrderListHandler, tierListHandler, adminHandler)
+		supplierOrderListHandler, tierListHandler, adminHandler, chatHandler, messageHandler)
 
 	app.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("Hello, World!")
@@ -125,4 +132,9 @@ func SetUpRouters(app *fiber.App, db *gorm.DB) {
 	app.Get("/suppliers/:supplierID/supplierOrderLists", supplierOrderListHandler.GetSupplierOrderListsBySupplierID)
 	app.Get("supplierOrderLists", supplierOrderListHandler.GetAllSupplierOrderLists)
 	app.Put("/supplierOrderLists/:id", supplierOrderListHandler.UpdateSupplierOrderList)
+
+	app.Get("/chat", chatHandler.GetAllChats)
+	app.Post("/chat", chatHandler.CreateChat)
+
+	app.Post("/message/:id", messageHandler.CreateMessage)
 }

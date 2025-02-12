@@ -64,8 +64,13 @@ func (upr *UserPostgresRepository) FindUserByEmail(email string) (*entities.User
 		return nil, result.Error
 	}
 
+	if result.RowsAffected == 0 {
+		return nil, result.Error
+	}
+
 	return user, nil
 }
+
 
 func (upr *UserPostgresRepository) UpdateUserTierByID(req *request.UpdateTierByUserIDRequest, user *entities.User) (*entities.User, error) {
 	query := "UPDATE users as u SET tier_rank=$1 WHERE u.id = $2 RETURNING id, credential_id, f_name, l_name, phone_number, email, password, status, role, tier_rank, address;"

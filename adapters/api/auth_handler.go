@@ -55,16 +55,15 @@ func (ah *AuthHandler) Login(c *fiber.Ctx) error {
 		})
 	}
 
-	err, user := ah.AuthUsecase.Login(req.Email, req.Password)
+	user, err := ah.AuthUsecase.Login(req.Email, req.Password)
 	if err != nil {
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-			"error": err.Error(),
+			"error": "incorrect email or password",
 		})
 	}
 
 	return c.JSON(fiber.Map{
 		"message": "login successful",
-		"user": user,
+		"user":    user,
 	})
-
 }

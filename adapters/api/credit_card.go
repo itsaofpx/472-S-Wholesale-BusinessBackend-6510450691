@@ -5,6 +5,7 @@ import (
 	"github.com/ppwlsw/sa-project-backend/domain/entities"
 	"github.com/ppwlsw/sa-project-backend/domain/request"
 	"github.com/ppwlsw/sa-project-backend/usecases"
+	"strconv"
 )
 
 type CreditCardHandler struct {
@@ -17,7 +18,6 @@ func InitiateCreditCardHandler(creditCardUsecase usecases.CreditCardUseCase) *Cr
 	}
 }
 
-
 func (cch *CreditCardHandler) CreateCreditCard(c *fiber.Ctx) error {
 	var newCreditCard entities.CreditCard
 
@@ -25,7 +25,6 @@ func (cch *CreditCardHandler) CreateCreditCard(c *fiber.Ctx) error {
 		return c.SendStatus(fiber.StatusBadRequest)
 	}
 
-	
 	creditCard, err := cch.CreditCardUsecase.CreateCreditCard(newCreditCard)
 	if err != nil {
 		return c.SendStatus(fiber.StatusBadRequest)
@@ -34,18 +33,15 @@ func (cch *CreditCardHandler) CreateCreditCard(c *fiber.Ctx) error {
 	return c.JSON(creditCard)
 }
 
-
-func (cch *CreditCardHandler) GetCreditCardByEmail(c *fiber.Ctx) error {
-	email := c.Params("email")
-
-	
-	if email == "" {
+func (cch *CreditCardHandler) GetCreditCardByUserID(c *fiber.Ctx) error {
+	id, err := strconv.Atoi(c.Params("id"))
+	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"message": "Email is required",
+			"message": "Invalid ID",
 		})
 	}
 
-	creditCard, err := cch.CreditCardUsecase.GetCreditCardByEmail(email)
+	creditCard, err := cch.CreditCardUsecase.GetCreditCardByUserID(id)
 	if err != nil {
 		return c.SendStatus(fiber.StatusNotFound)
 	}
@@ -53,24 +49,19 @@ func (cch *CreditCardHandler) GetCreditCardByEmail(c *fiber.Ctx) error {
 	return c.JSON(creditCard)
 }
 
-
-func (cch *CreditCardHandler) UpdateCreditCardByEmail(c *fiber.Ctx) error {
-	email := c.Params("email")
-
-	
-	if email == "" {
+func (cch *CreditCardHandler) UpdateCreditCardByUserID(c *fiber.Ctx) error {
+	id, err := strconv.Atoi(c.Params("id"))
+	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"message": "Email is required",
+			"message": "Invalid ID",
 		})
 	}
 
 	var req request.UpdateCreditCardRequest
-
 	if err := c.BodyParser(&req); err != nil {
 		return c.SendStatus(fiber.StatusBadRequest)
 	}
 
-	
 	creditCard := entities.CreditCard{
 		CardNumber:   req.CardNumber,
 		CardHolder:   req.CardHolder,
@@ -78,7 +69,7 @@ func (cch *CreditCardHandler) UpdateCreditCardByEmail(c *fiber.Ctx) error {
 		SecurityCode: req.SecurityCode,
 	}
 
-	updatedCard, err := cch.CreditCardUsecase.UpdateCreditCardByEmail(email, creditCard)
+	updatedCard, err := cch.CreditCardUsecase.UpdateCreditCardByUserID(id, creditCard)
 	if err != nil {
 		return c.SendStatus(fiber.StatusBadRequest)
 	}
@@ -86,20 +77,53 @@ func (cch *CreditCardHandler) UpdateCreditCardByEmail(c *fiber.Ctx) error {
 	return c.JSON(updatedCard)
 }
 
-
-func (cch *CreditCardHandler) DeleteCreditCardByEmail(c *fiber.Ctx) error {
-	email := c.Params("email")
-
-	
-	if email == "" {
+func (cch *CreditCardHandler) DeleteCreditCardByUserID(c *fiber.Ctx) error {
+	id, err := strconv.Atoi(c.Params("id"))
+	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"message": "Email is required",
+			"message": "Invalid ID",
 		})
 	}
 
-	err := cch.CreditCardUsecase.DeleteCreditCardByEmail(email)
+	err = cch.CreditCardUsecase.DeleteCreditCardByUserID(id)
 	if err != nil {
 		return c.SendStatus(fiber.StatusBadRequest)
+	}
+
+	return c.JSON(fiber.Map{
+		"message": "Credit card deleted successfully",
+	})
+}
+
+func (cch *CreditCardHandler) GetCreditCardsByUserID(c *fiber.Ctx) error {
+	id, err := strconv.Atoi(c.Params("id"))
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "Invalid ID",
+		})
+	}
+
+	creditCards, err := cch.CreditCardUsecase.GetCreditCardsByUserID(id)
+	if err != nil {
+		return c.SendStatus(fiber.StatusNotFound)
+	}
+
+	return c.JSON(creditCards)
+}
+
+func (cch *CreditCardHandler) DeleteByCardNumber(c *fiber.Ctx) error {
+	cardNumber := c.Params("card_number")
+	if cardNumber == "" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "Card number is required",
+		})
+	}
+
+	err := cch.CreditCardUsecase.DeleteByCardNumber(cardNumber)
+	if err != nil {
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+			"message": "Credit card not found",
+		})
 	}
 
 	return c.JSON(fiber.Map{

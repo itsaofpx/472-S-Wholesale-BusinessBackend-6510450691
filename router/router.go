@@ -133,9 +133,10 @@ func SetUpRouters(app *fiber.App, db *gorm.DB) {
 
 	// CreditCard
 	app.Post("/creditcard", handlers.CreditCardHandler.CreateCreditCard)
-	app.Get("/creditcard/:email", handlers.CreditCardHandler.GetCreditCardByEmail)
-	app.Put("/creditcard/:email", handlers.CreditCardHandler.UpdateCreditCardByEmail)
-	app.Delete("/creditcard/:email", handlers.CreditCardHandler.DeleteCreditCardByEmail)
-
+	app.Get("/creditcard/:id", handlers.CreditCardHandler.GetCreditCardByUserID)
+	app.Put("/creditcard/:id", handlers.CreditCardHandler.UpdateCreditCardByUserID)
+	app.Delete("/creditcard/:id", handlers.CreditCardHandler.DeleteCreditCardByUserID)
+	app.Get("/creditcards/:id", handlers.CreditCardHandler.GetCreditCardsByUserID)
+	app.Delete("/creditcard/number/:card_number", handlers.CreditCardHandler.DeleteByCardNumber)
 
 }

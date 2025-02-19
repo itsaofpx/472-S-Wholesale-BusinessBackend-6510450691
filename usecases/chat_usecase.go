@@ -8,6 +8,7 @@ import (
 type ChatUsecase interface {
 	CreateChat(c entities.Chat) (entities.Chat, error)
 	GetAllChats() ([]entities.Chat, error)
+	GetChatByUserID(id string) (entities.Chat, error)
 }
 
 type ChatService struct {
@@ -34,4 +35,8 @@ func (cs *ChatService) GetAllChats() ([]entities.Chat, error) {
 		return nil, err
 	}
 	return chats, nil
+}
+
+func (cs *ChatService) GetChatByUserID(id string) (entities.Chat, error) {
+	return cs.repo.GetChatByUserID(id)
 }

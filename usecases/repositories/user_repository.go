@@ -6,7 +6,7 @@ import (
 )
 
 type UserRepository interface {
-	CreateUser(user *entities.User) error
+	CreateUser(user *entities.User) (string, error)
 	GetUserByID(id int) (*entities.User, error)
 	GetAllUsers() (*[]entities.User, error)
 	FindUserByEmail(email string) (*entities.User, error)

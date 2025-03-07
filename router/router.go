@@ -138,5 +138,5 @@ func SetUpRouters(app *fiber.App, db *gorm.DB) {
 	app.Delete("/creditcard/:id", handlers.CreditCardHandler.DeleteCreditCardByUserID)
 	app.Get("/creditcards/:id", handlers.CreditCardHandler.GetCreditCardsByUserID)
 	app.Delete("/creditcard/number/:card_number", handlers.CreditCardHandler.DeleteByCardNumber)
-
+	
 }

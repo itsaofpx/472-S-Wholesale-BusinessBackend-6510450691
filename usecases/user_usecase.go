@@ -9,6 +9,7 @@ import (
 type UserUseCase interface {
 	GetUserByID(id int) (*entities.User, error)
 	GetAllUsers() (*[]entities.User, error)
+	UpdateUserByID(id int, user *request.UpdateUserByIDRequest) (*entities.User, error)
 	UpdateTierByUserID(req *request.UpdateTierByUserIDRequest) (*entities.User, error)
 }
 
@@ -46,6 +47,25 @@ func (us *UserService) GetAllUsers() (*[]entities.User, error) {
 	}
 
 	return users, nil
+}
+
+func (us *UserService) UpdateUserByID(id int, user *request.UpdateUserByIDRequest) (*entities.User, error) {
+	exist, err := us.repo.GetUserByID(id)
+	
+	if exist == nil {
+		return nil, nil
+	}
+
+	if err != nil {
+		return nil, err
+	}
+
+	updated, err := us.repo.UpdateUserByID(id, user)
+	if err != nil {
+		return nil, err
+	}
+
+	return updated, nil
 }
 
 func (us *UserService) UpdateTierByUserID(req *request.UpdateTierByUserIDRequest) (*entities.User, error) {

@@ -6,12 +6,15 @@ import (
 	"github.com/ppwlsw/sa-project-backend/domain/entities"
 	"github.com/ppwlsw/sa-project-backend/domain/response"
 	"github.com/ppwlsw/sa-project-backend/usecases/repositories"
+	"github.com/ppwlsw/sa-project-backend/domain/request"
 	"golang.org/x/crypto/bcrypt"
+	"fmt"
 )
 
 type AuthUsecase interface {
 	Login(email string, password string) (*response.AuthResponse, error)
 	Register(user *entities.User) error
+	ChangePassword (req *request.ChangePasswordRequest) error
 }
 
 type AuthService struct {
@@ -78,6 +81,36 @@ func (a *AuthService) Register(user *entities.User) error {
 
 	if err := a.repo.CreateUser(user); err != nil {
 		return errors.New("cannot create user, try again later")
+	}
+
+	return nil
+}
+
+func (a *AuthService) ChangePassword(req *request.ChangePasswordRequest) error {
+	// Find user by email
+	existUser, err := a.repo.FindUserByEmail(req.Email)
+	if err != nil || existUser == nil {
+		return errors.New("user not found")
+	}
+
+	fmt.Println(existUser.Password + " user passoword")
+	fmt.Println(req.OldPassword + " old password")
+
+	// Compare the old password
+	if err := bcrypt.CompareHashAndPassword([]byte(existUser.Password), []byte(req.OldPassword)); err != nil {
+		return errors.New("incorrect old password")
+	}
+
+	// Hash the new password
+	hashedNewPassword, err := bcrypt.GenerateFromPassword([]byte(req.NewPassword), bcrypt.DefaultCost)
+	if err != nil {
+		return errors.New("cannot hash new password")
+	}
+
+	// Update the password in the user record
+	req.NewPassword = string(hashedNewPassword)
+	if err := a.repo.ChangePassword(req); err != nil {
+		return errors.New("cannot update password, try again later")
 	}
 
 	return nil

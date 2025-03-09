@@ -5,6 +5,7 @@ import (
 	"github.com/ppwlsw/sa-project-backend/domain/request"
 	"github.com/ppwlsw/sa-project-backend/usecases/repositories"
 	"gorm.io/gorm"
+	"errors"
 )
 
 type UserPostgresRepository struct {
@@ -72,6 +73,25 @@ func (upr *UserPostgresRepository) FindUserByEmail(email string) (*entities.User
 }
 
 
+func (upr *UserPostgresRepository) UpdateUserByID(id int, user *request.UpdateUserByIDRequest) (*entities.User, error) {
+	query := `
+		UPDATE users 
+		SET f_name=$1, l_name=$2, phone_number=$3, email=$4, address=$5
+		WHERE id = $6 
+		RETURNING id, credential_id, f_name, l_name, phone_number, email, password, status, role, tier_rank, address;
+	`
+
+
+	var updatedUser entities.User
+	result := upr.db.Raw(query, user.FName, user.LName, user.PhoneNumber, user.Email, user.Address, id).Scan(&updatedUser)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return &updatedUser, nil
+}
+
+
 func (upr *UserPostgresRepository) UpdateUserTierByID(req *request.UpdateTierByUserIDRequest, user *entities.User) (*entities.User, error) {
 	query := "UPDATE users as u SET tier_rank=$1 WHERE u.id = $2 RETURNING id, credential_id, f_name, l_name, phone_number, email, password, status, role, tier_rank, address;"
 
@@ -82,4 +102,29 @@ func (upr *UserPostgresRepository) UpdateUserTierByID(req *request.UpdateTierByU
 
 	return user, nil
 
+}
+
+func (upr *UserPostgresRepository) ChangePassword(req *request.ChangePasswordRequest) error {
+	// ค้นหาผู้ใช้จาก email
+	var user entities.User
+	query := "SELECT id, credential_id, f_name, l_name, phone_number, email, password, status, role, tier_rank, address FROM users WHERE email = $1"
+	result := upr.db.Raw(query, req.Email).Scan(&user)
+
+	if result.Error != nil {
+		return result.Error
+	}
+
+	if result.RowsAffected == 0 {
+		return errors.New("user not found")
+	}
+
+	// อัพเดตข้อมูลผู้ใช้ด้วยรหัสผ่านใหม่
+	updateQuery := "UPDATE users SET password = $1 WHERE email = $2"
+	updateResult := upr.db.Exec(updateQuery, req.NewPassword, req.Email)
+
+	if updateResult.Error != nil {
+		return updateResult.Error
+	}
+
+	return nil
 }

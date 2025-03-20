@@ -68,3 +68,29 @@ func (ah *AuthHandler) Login(c *fiber.Ctx) error {
 		"user":    user,
 	})
 }
+
+func (ah *AuthHandler) ChangePassword(c *fiber.Ctx) error {
+	var req request.ChangePasswordRequest
+
+	// รับข้อมูลจาก body
+	if err := c.BodyParser(&req); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "cannot parse request body",
+		})
+	}
+
+	fmt.Println("eiei")
+	fmt.Println(req)
+
+	// ส่ง pointer ของ req ไปยัง ChangePassword
+	err := ah.AuthUsecase.ChangePassword(&req)  // ส่ง &req แทน req
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": err.Error(),
+		})
+	}
+
+	return c.JSON(fiber.Map{
+		"message": "password changed successfully",
+	})
+}

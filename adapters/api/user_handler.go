@@ -75,6 +75,41 @@ func (uh *UserHandler) GetAllUsers(c *fiber.Ctx) error {
 	return c.JSON(userResponses)
 }
 
+func (uh *UserHandler) UpdateUserByID(c *fiber.Ctx) error {
+	idParams, err := strconv.Atoi(c.Params("id"))
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "Invalid user ID",
+		})
+	}
+
+	// อ่านค่าจาก body
+	req := new(request.UpdateUserByIDRequest)
+	if err := c.BodyParser(req); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "Invalid request body",
+		})
+	}
+	// เรียกใช้ usecase เพื่ออัปเดตข้อมูล
+	updatedUser, err := uh.UserUsecase.UpdateUserByID(idParams, req)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": "Failed to update user",
+		})
+	}
+
+	// คืนค่าข้อมูลที่อัปเดต
+	var res response.UserResponse
+	if err := copier.Copy(&res, &updatedUser); err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": "Failed to map response data",
+		})
+	}
+
+	return c.JSON(res)
+}
+
+
 func (uh *UserHandler) UpdateTierByUserID(c *fiber.Ctx) error {
 
 	req := new(request.UpdateTierByUserIDRequest)

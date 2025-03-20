@@ -11,5 +11,7 @@ type UserRepository interface {
 	GetAllUsers() (*[]entities.User, error)
 	FindUserByEmail(email string) (*entities.User, error)
 	// UpdateUserTierByID(id int,*entities.User) (*entities.User, error)
+	UpdateUserByID(id int, user *request.UpdateUserByIDRequest) (*entities.User, error)
 	UpdateUserTierByID(req *request.UpdateTierByUserIDRequest,user *entities.User) (*entities.User, error)
+	ChangePassword(req *request.ChangePasswordRequest) error
 }

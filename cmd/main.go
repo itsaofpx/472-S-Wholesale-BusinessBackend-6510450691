@@ -47,6 +47,8 @@ func main() {
 		&entities.Order{},
 		&entities.OrderLine{}, &entities.TierList{},
 		&entities.OrderLine{}, &entities.Supplier{},
+		&entities.SupplierOrderList{},
+		&entities.CreditCard{},
 		&entities.SupplierOrderList{}, &entities.Chat{},
 		&entities.Message{},
 	)

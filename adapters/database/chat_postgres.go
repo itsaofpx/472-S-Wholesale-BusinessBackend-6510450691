@@ -53,3 +53,23 @@ func (cpr *ChatPostgresRepository) GetAllChats() ([]entities.Chat, error) {
 	
 	return chats, nil
 }
+
+func (cpr *ChatPostgresRepository) GetChatByUserID(id string) (entities.Chat, error) {
+	var chat entities.Chat
+
+	err := cpr.db.
+		Preload("Messages", func(db *gorm.DB) *gorm.DB {
+			return db.Order("messages.created_at ASC")
+		}).
+		Preload("Messages.User.TierList").
+		First(&chat, "User_ID = ?", id).Error
+
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return entities.Chat{}, err
+		}
+		return entities.Chat{}, err
+	}
+
+	return chat, nil
+}

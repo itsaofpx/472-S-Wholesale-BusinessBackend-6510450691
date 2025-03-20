@@ -34,14 +34,15 @@ func (ah *AuthHandler) Register(c *fiber.Ctx) error {
 		fmt.Println("Error copying data:", err)
 	}
 
-	if err := ah.AuthUsecase.Register(&user); err != nil {
+	getUser, err := ah.AuthUsecase.Register(&user)
+	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": err.Error(),
 		})
 	}
-
 	return c.Status(fiber.StatusCreated).JSON(fiber.Map{
 		"message": "Create Successfully",
+		"id":      getUser.ID,
 	})
 
 }

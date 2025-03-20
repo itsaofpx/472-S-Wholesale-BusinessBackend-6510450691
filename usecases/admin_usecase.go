@@ -38,13 +38,16 @@ func (a *AdminService) InitializeAdmin() error {
 	}
 
 	existUser = &entities.User{
+		CredentialID: "admin",
+		FName: "Admin",
+		LName: "",
 		Email: admin_email,
 		Password: string(hashedPassword),
 		Status: "A",
 		Role: 2,
 		TierRank: 1,
 	}
-	err = a.repo.CreateUser(existUser)
+	_ , err = a.repo.CreateUser(existUser)
 	if err != nil {
 		return err
 	}

@@ -12,6 +12,9 @@ func SetUpRouters(app *fiber.App, db *gorm.DB) {
 
 	userRepo := database.InitiateUserPostgresRepository(db)
 	userService := usecases.InitiateUserService(userRepo)
+	adminService := usecases.InitiateAdminService(userRepo)
+	adminHandler := api.InitiateAdminHandler(adminService)
+	adminHandler.InitializeAdmin()
 	userHandler := api.InitiateUserHandler(userService)
 
 	productRepo := database.InitiateProductPostGresRepository(db)
@@ -25,9 +28,7 @@ func SetUpRouters(app *fiber.App, db *gorm.DB) {
 	authService := usecases.InitiateAuthService(userRepo)
 	authHandler := api.InitiateAuthHandler(authService)
 
-	adminService := usecases.InitiateAdminService(userRepo)
-	adminHandler := api.InitiateAdminHandler(adminService)
-	adminHandler.InitializeAdmin()
+	
 
 	orderRepo := database.InitiateOrderPostgresRepository(db)
 	orderService := usecases.InitiateOrderService(orderRepo)
@@ -50,6 +51,10 @@ func SetUpRouters(app *fiber.App, db *gorm.DB) {
 	supplierOrderListService := usecases.InitiateSupplierOrderListService(supplierOrderListRepo)
 	supplierOrderListHandler := api.InitiateSupplierOrderListHandler(supplierOrderListService)
 
+	creditcardRepo := database.InitiateCreditCardPostgresRepository(db)
+	creditcardService := usecases.InitiateCreditCardService(creditcardRepo)
+	creditcardHandler := api.InitiateCreditCardHandler(creditcardService)
+
 	chatRepo := database.InitiateChatPostgresRepository(db)
 	chatService := usecases.InitiateChatService(chatRepo)
 	chatHandler := api.InitiateChatHandler(chatService)
@@ -61,12 +66,16 @@ func SetUpRouters(app *fiber.App, db *gorm.DB) {
 		userHandler, productHandler, transactionHandler,
 		authHandler, orderHandler,
 		orderLineHandler, supplierHandler,
+
+		supplierOrderListHandler, tierListHandler, adminHandler,creditcardHandler,
+	)
+
 		supplierOrderListHandler, tierListHandler, adminHandler, chatHandler, messageHandler)
 
 	app.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("Hello, World!")
 	})
-
+	
 	//User
 	app.Get("/users", handlers.UserHandler.GetAllUsers)
 	app.Get("/users/:id", handlers.UserHandler.GetUserByID)
@@ -135,8 +144,19 @@ func SetUpRouters(app *fiber.App, db *gorm.DB) {
 	app.Get("supplierOrderLists", supplierOrderListHandler.GetAllSupplierOrderLists)
 	app.Put("/supplierOrderLists/:id", supplierOrderListHandler.UpdateSupplierOrderList)
 
+
+	// CreditCard
+	app.Post("/creditcard", handlers.CreditCardHandler.CreateCreditCard)
+	app.Get("/creditcard/:id", handlers.CreditCardHandler.GetCreditCardByUserID)
+	app.Put("/creditcard/:id", handlers.CreditCardHandler.UpdateCreditCardByUserID)
+	app.Delete("/creditcard/:id", handlers.CreditCardHandler.DeleteCreditCardByUserID)
+	app.Get("/creditcards/:id", handlers.CreditCardHandler.GetCreditCardsByUserID)
+	app.Delete("/creditcard/number/:card_number", handlers.CreditCardHandler.DeleteByCardNumber)
+	
 	app.Get("/chat", chatHandler.GetAllChats)
+	app.Get("/chat/:id", chatHandler.GetChatByUserID)
 	app.Post("/chat", chatHandler.CreateChat)
 
 	app.Post("/message/:id", messageHandler.CreateMessage)
+	app.Post("/message/chat/:id", messageHandler.CreateMessageByChatID)
 }

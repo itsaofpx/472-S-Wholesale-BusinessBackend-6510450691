@@ -2,7 +2,10 @@ package usecases
 
 import (
 	"errors"
+	"fmt"
 	"regexp"
+	"strconv"
+
 	"github.com/ppwlsw/sa-project-backend/domain/entities"
 	"github.com/ppwlsw/sa-project-backend/domain/response"
 	"github.com/ppwlsw/sa-project-backend/usecases/repositories"
@@ -15,6 +18,8 @@ type AuthUsecase interface {
 	Login(email string, password string) (*response.AuthResponse, error)
 	Register(user *entities.User) error
 	ChangePassword (req *request.ChangePasswordRequest) error
+	Register(user *entities.User) (*response.UserResponse, error)
+
 }
 
 type AuthService struct {
@@ -51,39 +56,57 @@ func (a *AuthService) Login(email string, password string) (*response.AuthRespon
 }
 
 
-func (a *AuthService) Register(user *entities.User) error {
+func (a *AuthService) Register(user *entities.User) (*response.UserResponse, error) {
 	existUser, err := a.repo.FindUserByEmail(user.Email)
 	if err == nil && existUser != nil {
-		return errors.New("this email is already used")
+		return nil, errors.New("this email is already used")
 	}
 
 	if !isValidEmail(user.Email) {
-		return errors.New("invalid email")
+		return nil, errors.New("invalid email")
 	}
 
 	if !isValidPhoneNumber(user.PhoneNumber) {
-		return errors.New("invalid phone number")
+		return nil, errors.New("invalid phone number")
 	}
 
 	if !isValidCredentialID(user.CredentialID) {
-		return errors.New("invalid credential ID")
+		return nil, errors.New("invalid credential ID")
 	}
 
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 	if err != nil {
-		return errors.New("can't hash password")
+		return nil, errors.New("can't hash password")
 	}
 
 	user.Password = string(hashedPassword)
 	user.Status = "A"
 	user.Role = 1
 	user.TierRank = 1
-
-	if err := a.repo.CreateUser(user); err != nil {
-		return errors.New("cannot create user, try again later")
+	
+	id, err := a.repo.CreateUser(user);
+	if err != nil {
+		return nil, errors.New("cannot create user, try again later")
+	}
+	parsedID, err :=  strconv.Atoi(id)
+	if err != nil {
+		fmt.Println("Error:", err)
 	}
 
-	return nil
+	fmt.Println("Parsed ID:", parsedID)
+	response := &response.UserResponse{
+		ID:           parsedID,
+		CredentialID: user.CredentialID,
+		FName:        user.FName,
+		LName:        user.LName,
+		PhoneNumber:  user.PhoneNumber,
+		Email:        user.Email,
+		Status:       user.Status,
+		Role:         user.Role,
+		TierRank:     user.TierRank,
+		Address:      user.Address,
+	}
+	return response , nil
 }
 
 func (a *AuthService) ChangePassword(req *request.ChangePasswordRequest) error {

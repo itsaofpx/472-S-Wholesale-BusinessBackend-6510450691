@@ -34,14 +34,15 @@ func (ah *AuthHandler) Register(c *fiber.Ctx) error {
 		fmt.Println("Error copying data:", err)
 	}
 
-	if err := ah.AuthUsecase.Register(&user); err != nil {
+	getUser, err := ah.AuthUsecase.Register(&user)
+	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": err.Error(),
 		})
 	}
-
 	return c.Status(fiber.StatusCreated).JSON(fiber.Map{
 		"message": "Create Successfully",
+		"id":      getUser.ID,
 	})
 
 }
@@ -55,16 +56,15 @@ func (ah *AuthHandler) Login(c *fiber.Ctx) error {
 		})
 	}
 
-	err, user := ah.AuthUsecase.Login(req.Email, req.Password)
+	user, err := ah.AuthUsecase.Login(req.Email, req.Password)
 	if err != nil {
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-			"error": err.Error(),
+			"error": "incorrect email or password",
 		})
 	}
 
 	return c.JSON(fiber.Map{
 		"message": "login successful",
-		"user": user,
+		"user":    user,
 	})
-
 }

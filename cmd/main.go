@@ -49,6 +49,8 @@ func main() {
 		&entities.OrderLine{}, &entities.Supplier{},
 		&entities.SupplierOrderList{},
 		&entities.CreditCard{},
+		&entities.SupplierOrderList{}, &entities.Chat{},
+		&entities.Message{},
 	)
 
 	router.SetUpRouters(app, db)

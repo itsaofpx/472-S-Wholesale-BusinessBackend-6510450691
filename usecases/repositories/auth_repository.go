@@ -8,7 +8,6 @@ import (
 
 type AuthRepository interface {
 	Login(email string, password string) error
-	Register(entities.User) error
 	ChangePassword(req *request.ChangePasswordRequest) error
 	Register(entities.User) (*response.UserResponse, error)
 

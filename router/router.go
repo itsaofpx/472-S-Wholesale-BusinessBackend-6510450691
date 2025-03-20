@@ -65,12 +65,9 @@ func SetUpRouters(app *fiber.App, db *gorm.DB) {
 	handlers := api.ProvideHandlers(
 		userHandler, productHandler, transactionHandler,
 		authHandler, orderHandler,
-		orderLineHandler, supplierHandler,
-
-		supplierOrderListHandler, tierListHandler, adminHandler,creditcardHandler,
-	)
-
+		orderLineHandler,creditcardHandler, supplierHandler,
 		supplierOrderListHandler, tierListHandler, adminHandler, chatHandler, messageHandler)
+
 
 	app.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("Hello, World!")

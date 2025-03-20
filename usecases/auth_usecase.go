@@ -11,12 +11,11 @@ import (
 	"github.com/ppwlsw/sa-project-backend/usecases/repositories"
 	"github.com/ppwlsw/sa-project-backend/domain/request"
 	"golang.org/x/crypto/bcrypt"
-	"fmt"
+
 )
 
 type AuthUsecase interface {
 	Login(email string, password string) (*response.AuthResponse, error)
-	Register(user *entities.User) error
 	ChangePassword (req *request.ChangePasswordRequest) error
 	Register(user *entities.User) (*response.UserResponse, error)
 

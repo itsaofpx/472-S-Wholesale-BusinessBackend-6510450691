@@ -24,11 +24,7 @@ func ProvideHandlers(
 	AuthHandler *AuthHandler,
 	OrderHandler *OrderHandler,
 	OrderLineHandler *OrderLineHandler,
-	SupplierHandler *SupplierHandler,
-	SupplierOrderListHandler *SupplierOrderListHandler,
-	TierListHandler *TierListHandler,
-	AdminHandler *AdminHandler,
-	CreditCardHandler *CreditCardHandler) *Handlers {
+	CreditCardHandler *CreditCardHandler,
 	SupplierHandler *SupplierHandler, SupplierOrderListHandler *SupplierOrderListHandler,
 	TierListHandler *TierListHandler, AdminHandler *AdminHandler, ChatHandler *ChatHandler, MessageHandler *MessageHandler) *Handlers {
 	return &Handlers{

@@ -46,3 +46,16 @@ func (ch ChatHandler) GetAllChats(c *fiber.Ctx) error{
 	}
 	return c.JSON(chats)
 }
+
+func (ch ChatHandler) GetChatByUserID(c *fiber.Ctx) error {
+	id := c.Params("id")
+
+	chat, err := ch.Chatusecase.GetChatByUserID(id)
+	if err != nil {
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+			"error": err.Error(),
+		})
+	}
+
+	return c.JSON(chat)
+}

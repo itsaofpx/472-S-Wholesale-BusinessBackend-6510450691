@@ -55,3 +55,20 @@ func (mpr *MessagePostgresRepository) CreateMessage(m entities.Message) (entitie
 	
 	return messageWithData, nil
 }
+
+func (mpr *MessagePostgresRepository) CreateMessageByChatID(m entities.Message) (entities.Message, error) {
+	if err := mpr.db.Create(&m).Error; err != nil {
+			return entities.Message{}, err
+	}
+	
+	var messageWithData entities.Message
+	err := mpr.db.
+			Preload("User.TierList").
+			First(&messageWithData, m.ID).Error
+	
+	if err != nil {
+			return entities.Message{}, err
+	}
+	
+	return messageWithData, nil
+}

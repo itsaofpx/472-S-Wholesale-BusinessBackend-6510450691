@@ -12,6 +12,9 @@ func SetUpRouters(app *fiber.App, db *gorm.DB) {
 
 	userRepo := database.InitiateUserPostgresRepository(db)
 	userService := usecases.InitiateUserService(userRepo)
+	adminService := usecases.InitiateAdminService(userRepo)
+	adminHandler := api.InitiateAdminHandler(adminService)
+	adminHandler.InitializeAdmin()
 	userHandler := api.InitiateUserHandler(userService)
 
 	productRepo := database.InitiateProductPostGresRepository(db)
@@ -25,9 +28,7 @@ func SetUpRouters(app *fiber.App, db *gorm.DB) {
 	authService := usecases.InitiateAuthService(userRepo)
 	authHandler := api.InitiateAuthHandler(authService)
 
-	adminService := usecases.InitiateAdminService(userRepo)
-	adminHandler := api.InitiateAdminHandler(adminService)
-	adminHandler.InitializeAdmin()
+	
 
 	orderRepo := database.InitiateOrderPostgresRepository(db)
 	orderService := usecases.InitiateOrderService(orderRepo)
@@ -134,7 +135,9 @@ func SetUpRouters(app *fiber.App, db *gorm.DB) {
 	app.Put("/supplierOrderLists/:id", supplierOrderListHandler.UpdateSupplierOrderList)
 
 	app.Get("/chat", chatHandler.GetAllChats)
+	app.Get("/chat/:id", chatHandler.GetChatByUserID)
 	app.Post("/chat", chatHandler.CreateChat)
 
 	app.Post("/message/:id", messageHandler.CreateMessage)
+	app.Post("/message/chat/:id", messageHandler.CreateMessageByChatID)
 }

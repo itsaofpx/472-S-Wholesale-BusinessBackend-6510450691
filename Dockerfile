@@ -1,22 +1,16 @@
 # Stage 1: Build the Go application
 FROM golang:1.21-alpine AS builder
 
+# ติดตั้งเครื่องมือที่จำเป็น
+RUN apk add --no-cache git gcc musl-dev
+
 # Set working directory
 WORKDIR /app
 
-# ติดตั้งเครื่องมือที่จำเป็น
-RUN apk add --no-cache git
-
-# ตรวจสอบว่ามีไฟล์ go.mod และ go.sum หรือไม่ แล้วค่อยคัดลอก
+# คัดลอกโค้ดทั้งหมด
 COPY . .
 
-# สร้างไฟล์ go.mod หากไม่มี
-RUN if [ ! -f go.mod ]; then go mod init sa-project; fi
-
-# ดาวน์โหลด dependencies และตรวจสอบ
-RUN go mod tidy
-
-# Build the application
+# พยายาม build โดยตรง ไม่ใช้ go mod tidy หรือ go mod download
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
 
 # Stage 2: Create a minimal runtime image

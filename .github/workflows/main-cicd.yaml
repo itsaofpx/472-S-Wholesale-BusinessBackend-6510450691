@@ -91,7 +91,6 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      # ใช้ค่า tag ที่ส่งมาจาก job create-release โดยตรง
       - name: Set version from previous job
         id: get_version
         run: |

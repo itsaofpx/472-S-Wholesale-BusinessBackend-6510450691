@@ -26,9 +26,9 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker build -t AG/DO-backend-test-v1:latest .
+          docker build -t ag/do-backend-test-v1:latest .
 
       - name: Push Docker Image
         run: |
           echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-          docker push AG/DO-backend-test-v1:latest
+          docker push ag/do-backend-test-v1:latest

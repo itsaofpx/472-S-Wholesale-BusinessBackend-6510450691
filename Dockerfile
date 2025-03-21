@@ -16,3 +16,5 @@ FROM alpine:latest
 WORKDIR /root/
 COPY --from=builder /app/myapp .
 CMD ["./myapp"]
+
+

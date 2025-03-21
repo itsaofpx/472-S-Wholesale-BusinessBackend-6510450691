@@ -1,17 +1,20 @@
 module github.com/ppwlsw/sa-project-backend
 
-go 1.20
+go 1.21
 
 require (
-	github.com/gofiber/fiber/v2 v2.52.5
-	github.com/jinzhu/copier v0.4.0
-	github.com/lib/pq v1.10.9
-	github.com/spf13/viper v1.19.0
-	github.com/stretchr/testify v1.10.0
-	golang.org/x/crypto v0.27.0
-	gorm.io/driver/postgres v1.5.9
-	gorm.io/gorm v1.25.12
+    github.com/gofiber/fiber/v2 v2.52.5
+    github.com/jinzhu/copier v0.4.0
+    github.com/lib/pq v1.10.2
+    github.com/spf13/viper v1.19.0
+    github.com/stretchr/testify v1.10.0
+    golang.org/x/crypto v0.27.0
+    gorm.io/driver/postgres v1.5.9
+    gorm.io/gorm v1.25.12
+    github.com/jackc/pgx/v5 v5.7.1 // เพิ่มบรรทัดนี้ถ้ายังไม่มี
 )
+
+
 
 require (
 	github.com/andybalholm/brotli v1.0.5 // indirect

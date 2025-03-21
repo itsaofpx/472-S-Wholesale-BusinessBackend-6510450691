@@ -1,0 +1,21 @@
+{
+  "name": "472-g-wholesale-businessbackend-ag-do",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aeuro7/472-G-Wholesale-BusinessBackend-AG-DO.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/aeuro7/472-G-Wholesale-BusinessBackend-AG-DO/issues"
+  },
+  "homepage": "https://github.com/aeuro7/472-G-Wholesale-BusinessBackend-AG-DO#readme"
+}

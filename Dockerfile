@@ -4,12 +4,17 @@ FROM golang:1.21-alpine AS builder
 # Set working directory
 WORKDIR /app
 
-# Copy go.mod and go.sum files first for better caching
-COPY go.mod go.sum ./
-RUN go mod download
+# ติดตั้งเครื่องมือที่จำเป็น
+RUN apk add --no-cache git
 
-# Copy the source code
+# ตรวจสอบว่ามีไฟล์ go.mod และ go.sum หรือไม่ แล้วค่อยคัดลอก
 COPY . .
+
+# สร้างไฟล์ go.mod หากไม่มี
+RUN if [ ! -f go.mod ]; then go mod init sa-project; fi
+
+# ดาวน์โหลด dependencies และตรวจสอบ
+RUN go mod tidy
 
 # Build the application
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .

@@ -7,7 +7,7 @@ import (
 
 type MessageUsecase interface {
 	CreateMessage(m entities.Message) (entities.Message, error)
-    CreateMessageByChatID(m entities.Message) (entities.Message, error)
+	CreateMessageByChatID(m entities.Message) (entities.Message, error)
 }
 
 type MessageService struct {
@@ -21,27 +21,27 @@ func InitiateMessageService(repo repositories.MessageRepository) MessageUsecase 
 }
 
 func (ms *MessageService) CreateMessage(m entities.Message) (entities.Message, error) {
-    // Validate that User and Chat exist
-    if err := ms.repo.ValidateReferences(m.UserID, m.ChatID); err != nil {
-        return entities.Message{}, err
-    }
-    
-    message, err := ms.repo.CreateMessage(m)
-    if err != nil {
-        return entities.Message{}, err
-    }
-    return message, nil
+	// Validate that User and Chat exist
+	if err := ms.repo.ValidateReferences(m.UserID, m.ChatID); err != nil {
+		return entities.Message{}, err
+	}
+
+	message, err := ms.repo.CreateMessage(m)
+	if err != nil {
+		return entities.Message{}, err
+	}
+	return message, nil
 }
 
 func (ms *MessageService) CreateMessageByChatID(m entities.Message) (entities.Message, error) {
-    // Validate that User and Chat exist
-    if err := ms.repo.ValidateReferences(m.UserID, m.ChatID); err != nil {
-        return entities.Message{}, err
-    }
-    
-    message, err := ms.repo.CreateMessage(m)
-    if err != nil {
-        return entities.Message{}, err
-    }
-    return message, nil
+	// Validate that User and Chat exist
+	if err := ms.repo.ValidateReferences(m.UserID, m.ChatID); err != nil {
+		return entities.Message{}, err
+	}
+
+	message, err := ms.repo.CreateMessage(m)
+	if err != nil {
+		return entities.Message{}, err
+	}
+	return message, nil
 }

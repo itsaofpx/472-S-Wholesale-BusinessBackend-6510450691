@@ -1,20 +1,20 @@
 module github.com/ppwlsw/sa-project-backend
 
-go 1.21
+go 1.22.0
+
+toolchain go1.23.0
 
 require (
-    github.com/gofiber/fiber/v2 v2.52.5
-    github.com/jinzhu/copier v0.4.0
-    github.com/lib/pq v1.10.2
-    github.com/spf13/viper v1.19.0
-    github.com/stretchr/testify v1.10.0
-    golang.org/x/crypto v0.27.0
-    gorm.io/driver/postgres v1.5.9
-    gorm.io/gorm v1.25.12
-    github.com/jackc/pgx/v5 v5.7.1 // เพิ่มบรรทัดนี้ถ้ายังไม่มี
+	github.com/gofiber/fiber/v2 v2.52.5
+	github.com/jackc/pgx/v5 v5.7.1 // indirect; เพิ่มบรรทัดนี้ถ้ายังไม่มี
+	github.com/jinzhu/copier v0.4.0
+	github.com/lib/pq v1.10.2
+	github.com/spf13/viper v1.19.0
+	github.com/stretchr/testify v1.10.0
+	golang.org/x/crypto v0.27.0
+	gorm.io/driver/postgres v1.5.9
+	gorm.io/gorm v1.25.12
 )
-
-
 
 require (
 	github.com/andybalholm/brotli v1.0.5 // indirect
@@ -24,7 +24,6 @@ require (
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20240606120523-5a60cdf6a761 // indirect
-	github.com/jackc/pgx/v5 v5.7.1 // indirect
 	github.com/jackc/puddle/v2 v2.2.2 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect

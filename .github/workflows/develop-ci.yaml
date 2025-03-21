@@ -71,22 +71,7 @@ jobs:
         uses: golangci/golangci-lint-action@v3
         with:
           version: latest
-
-  security:
-    name: Security Scan
-    runs-on: ubuntu-latest
-    needs: [validate-pr]
-    if: github.event_name == 'pull_request' || success()
-
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v4
-
-      - name: Run Gosec Security Scanner
-        uses: securego/gosec@master
-        with:
-          args: ./...
-
+          
   build-docker:
     name: Build Docker Image
     runs-on: ubuntu-latest

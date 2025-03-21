@@ -3,7 +3,6 @@ package tests
 import (
 	"errors"
 	"testing"
-
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"gorm.io/gorm"
@@ -152,4 +151,5 @@ func TestChatService_GetChatByUserID(t *testing.T) {
 			}
 		})
 	}
+
 }

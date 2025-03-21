@@ -26,9 +26,9 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker build -f docker/prod.Dockerfile -t agdo_test:latest .          
+          docker build -f docker/prod.Dockerfile -t aeuro7/agdo_test:latest .
 
       - name: Push Docker Image
         run: |
           echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-          docker push agdo_test:latest
+          docker push aeuro7/agdo_test:latest

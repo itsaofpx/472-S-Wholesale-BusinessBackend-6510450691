@@ -26,9 +26,6 @@ jobs:
 
       - name: Test
         run: go test -v ./...
-
-
-
   create-release:
     name: Create Release
     runs-on: ubuntu-latest
